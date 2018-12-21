@@ -18,7 +18,10 @@ func main() {
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
-		args := strings.Split(scanner.Text(), " ")
+		args := strings.Split(strings.TrimSpace(scanner.Text()), " ")
+		if len(args) == 1 && args[0] == "" {
+			continue
+		}
 		if len(args) < 2 {
 			_, _ = fmt.Fprintln(os.Stderr, "Please enter a short or full pod name and its ports in format local:remote")
 			continue

@@ -1,6 +1,6 @@
 > # 🎳 forward
 >
-> **forward** - extended kubectl port-forward - multiple port forwarding at the same time.
+> `forward` - extended `kubectl port-forward` - multiple port forwarding simultaneously.
 
 ## Motivation
 
@@ -17,8 +17,9 @@ site-redis-b654f56d4-55kvk            1/1       Running   0          1d
 site-rabbitmq-7677fdf798-flswj        1/1       Running   0          1d
 $ kubectl port-forward catalog-postgresql-7595dd6b9c-fkrbz 5432:5432 &
 $ kubectl port-forward catalog-redis-76bbdf658b-4zdwc      6379:6379 &
+$ ps | fgrep 'kubectl port-forward ...' | xargs kill -SIGKILL
 
-(ง̀-́)ง boring...
+It's so boring... （╯°□°）╯︵┻━┻
 ```
 
 I want to
@@ -40,7 +41,9 @@ which redis?
 - [ ] better process management
   - stop forwarding for part ports/pods
   - signal handling
-- [ ] better kubernetes integration (API instead CLI)
+- [ ] better kubernetes integration
+  - all options of `kubectl port-forward`
+  - API instead CLI
 
 ---
 
