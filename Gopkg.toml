@@ -1,0 +1,8 @@
+[[constraint]]
+  name = "gopkg.in/AlecAivazis/survey.v1"
+  version = "1.7.1"
+
+[prune]
+  go-tests = true
+  non-go = true
+  unused-packages = true
