@@ -17,10 +17,11 @@ site-redis-b654f56d4-55kvk            1/1       Running   0          1d
 site-rabbitmq-7677fdf798-flswj        1/1       Running   0          1d
 $ kubectl port-forward catalog-postgresql-7595dd6b9c-fkrbz 5432:5432 &
 $ kubectl port-forward catalog-redis-76bbdf658b-4zdwc      6379:6379 &
-$ ... # boring...
+
+(ง̀-́)ง boring...
 ```
 
-I want
+I want to
 
 ```bash
 $ forward postgresql 5432:5432 redis 6379:6379
@@ -28,6 +29,18 @@ which redis?
 > catalog-redis-76bbdf658b-4zdwc
   site-redis-b654f56d4-55kvk
 ```
+
+## TODO
+
+- [ ] pod name suggestion (autocomplete)
+- [ ] ports suggestion based on pod description
+- [ ] pass arguments
+- [ ] detach mode
+- [ ] [gops](https://github.com/google/gops) integration
+- [ ] better process management
+  - stop forwarding for part ports/pods
+  - signal handling
+- [ ] better kubernetes integration (API instead CLI)
 
 ---
 
