@@ -7,16 +7,17 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"regexp"
 	"strconv"
 	"strings"
+	"time"
 
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
-const kubectl = "kubectl"
-
 func main() {
 	flag.Parse()
+	handle(flag.Args())
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
@@ -25,7 +26,7 @@ func main() {
 			continue
 		}
 		if len(args) < 2 {
-			_, _ = fmt.Fprintln(os.Stderr, "Please enter a short or full pod name and its ports in format local:remote")
+			_, _ = fmt.Fprintln(os.Stderr, "Please enter a short or full pod name and its ports in format [local:]remote")
 			continue
 		}
 		pod, ports := args[0], convert(args[1:])
@@ -39,6 +40,49 @@ func main() {
 			pod = define(options)
 		}
 		go forward(pod, ports)
+		time.Sleep(50 * time.Millisecond)
+	}
+}
+
+func handle(args []string) {
+	is := regexp.MustCompile(`^\d+(?::\d+)?$`)
+	entries := make([][]string, 0, len(args)/2)
+	for len(args) > 0 {
+		var name, port string
+		entry := make([]string, 0, 4)
+		name, args = args[0], args[1:]
+		if name == "--" {
+			continue
+		}
+		if is.MatchString(name) {
+			panic("Please provide a pod name first")
+		}
+		entry = append(entry, name)
+		for len(args) > 0 {
+			port = args[0]
+			if !is.MatchString(port) {
+				break
+			}
+			args = args[1:]
+			entry = append(entry, port)
+		}
+		if len(entry) == 1 {
+			panic(fmt.Sprintf("Please provide the %q pod's ports in format [local:]remote", entry[0]))
+		}
+		entries = append(entries, entry)
+	}
+	for _, args := range entries {
+		pod, ports := args[0], convert(args[1:])
+		options := find(pod)
+		if len(options) == 0 {
+			panic(fmt.Sprintf("Pod not found by criteria %q", pod))
+		}
+		pod = options[0]
+		if len(options) > 1 {
+			pod = define(options)
+		}
+		go forward(pod, ports)
+		time.Sleep(50 * time.Millisecond)
 	}
 }
 
@@ -102,7 +146,7 @@ func forward(pod string, ports map[int16]int16) {
 	for local, remote := range ports {
 		args = append(args, strings.Join([]string{strconv.Itoa(int(local)), strconv.Itoa(int(remote))}, ":"))
 	}
-	cmd := exec.Command(kubectl, args...)
+	cmd := exec.Command("kubectl", args...)
 	cmd.Stderr, cmd.Stdout = os.Stderr, os.Stdout
 	if err := cmd.Run(); err != nil {
 		panic(err)
@@ -113,7 +157,7 @@ func pods() []string {
 	buf := bytes.NewBuffer(nil)
 	scanner := bufio.NewScanner(buf)
 	scanner.Split(bufio.ScanLines)
-	cmd := exec.Command(kubectl, "get", "pod")
+	cmd := exec.Command("kubectl", "get", "pod")
 	cmd.Stdout = buf
 	if err := cmd.Run(); err != nil {
 		panic(err)

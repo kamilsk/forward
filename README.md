@@ -17,7 +17,7 @@ site-redis-b654f56d4-55kvk            1/1       Running   0          1d
 site-rabbitmq-7677fdf798-flswj        1/1       Running   0          1d
 $ kubectl port-forward catalog-postgresql-7595dd6b9c-fkrbz 5432:5432 &
 $ kubectl port-forward catalog-redis-76bbdf658b-4zdwc      6379:6379 &
-$ ps | fgrep 'kubectl port-forward ...' | xargs kill -SIGKILL
+$ ps x | fgrep 'kubectl port-forward ...' | xargs kill -SIGKILL
 
 It's so boring... （╯°□°）╯︵┻━┻
 ```
