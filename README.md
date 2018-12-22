@@ -43,6 +43,10 @@ which redis?
   - [**Somehow, 20xx**][project_v2_dl]
   - Better integration with [Kubernetes](https://kubernetes.io/).
 
+## Demo
+
+[![asciicast](https://asciinema.org/a/217993.svg)](https://asciinema.org/a/217993)
+
 ---
 
 [![@kamilsk][icon_tw_author]](https://twitter.com/ikamilsk)
