@@ -31,19 +31,17 @@ which redis?
   site-redis-b654f56d4-55kvk
 ```
 
-## TODO
+[![Patreon][icon_patreon]](https://www.patreon.com/octolab)
+[![License][icon_license]](LICENSE)
 
-- [ ] pod name suggestion (autocomplete)
-- [ ] ports suggestion based on pod description
-- [ ] pass arguments
-- [ ] detach mode
-- [ ] [gops](https://github.com/google/gops) integration
-- [ ] better process management
-  - stop forwarding for part ports/pods
-  - signal handling
-- [ ] better kubernetes integration
-  - all options of `kubectl port-forward`
-  - API instead CLI
+## Roadmap
+
+- [ ] v1: [MVP][project_v1]
+  - [**Someday, 20xx**][project_v1_dl]
+  - Main concepts and working prototype.
+- [ ] v2: [Rate limiting][project_v2]
+  - [**Somehow, 20xx**][project_v2_dl]
+  - Better integration with [Kubernetes](https://kubernetes.io/).
 
 ---
 
@@ -57,3 +55,8 @@ made with ❤️ by [OctoLab](https://www.octolab.org/)
 [icon_tw_author]:  https://img.shields.io/badge/author-%40kamilsk-blue.svg
 [icon_tw_sponsor]: https://img.shields.io/badge/sponsor-%40octolab-blue.svg
 [icon_twitter]:    https://img.shields.io/twitter/url/http/shields.io.svg?style=social
+
+[project_v1]:      https://github.com/kamilsk/forward/projects/1
+[project_v1_dl]:   https://github.com/kamilsk/forward/milestone/1
+[project_v2]:      https://github.com/kamilsk/forward/projects/2
+[project_v2_dl]:   https://github.com/kamilsk/forward/milestone/2
