@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"flag"
 	"fmt"
 	"os"
 	"os/exec"
@@ -15,6 +16,7 @@ import (
 const kubectl = "kubectl"
 
 func main() {
+	flag.Parse()
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
@@ -44,18 +46,22 @@ func convert(raw []string) map[int16]int16 {
 	forwarding := make(map[int16]int16)
 	for _, row := range raw {
 		ports := strings.Split(row, ":")
-		if len(ports) != 2 {
-			panic("please provide ports in format local:remote")
+		if len(ports) != 1 && len(ports) != 2 {
+			panic("please provide ports in format [local:]remote")
 		}
-		local, err := strconv.ParseInt(ports[0], 10, 16)
-		if err != nil {
-			panic(err)
+		converted := make([]int16, 0, len(ports))
+		for _, port := range ports {
+			value, err := strconv.ParseInt(port, 10, 16)
+			if err != nil {
+				panic(err)
+			}
+			converted = append(converted, int16(value))
 		}
-		remote, err := strconv.ParseInt(ports[1], 10, 16)
-		if err != nil {
-			panic(err)
+		if len(ports) == 1 {
+			forwarding[converted[0]] = converted[0]
+			continue
 		}
-		forwarding[int16(local)] = int16(remote)
+		forwarding[converted[0]] = converted[1]
 	}
 	return forwarding
 }
