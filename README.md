@@ -48,6 +48,32 @@ which redis?
 
 [![asciicast](https://asciinema.org/a/217993.svg)](https://asciinema.org/a/217993)
 
+## Installation
+
+### Homebrew
+
+```bash
+$ brew install kamilsk/tap/forward
+```
+
+### Binary
+
+```bash
+$ export REQ_VER=0.1.0  # all available versions are on https://github.com/kamilsk/forward/releases/
+$ export REQ_OS=Linux   # macOS is also available
+$ export REQ_ARCH=64bit # 32bit is also available
+# wget -q -O forward.tar.gz
+$ curl -sL -o forward.tar.gz \
+       https://github.com/kamilsk/forward/releases/download/"${REQ_VER}/forward_${REQ_VER}_${REQ_OS}-${REQ_ARCH}".tar.gz
+$ tar xf forward.tar.gz -C "${GOPATH}"/bin/ && rm forward.tar.gz
+```
+
+### From source code
+
+```bash
+$ go get -u github.com/kamilsk/forward
+```
+
 ---
 
 [![@kamilsk][icon_tw_author]](https://twitter.com/ikamilsk)
