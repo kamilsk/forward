@@ -2,6 +2,10 @@
 >
 > `forward` - extended `kubectl port-forward` - multiple port forwarding simultaneously.
 
+[![Patreon][icon_patreon]](https://www.patreon.com/octolab)
+[![Build Status][icon_build]][page_build]
+[![License][icon_license]](LICENSE)
+
 ## Motivation
 
 Instead of
@@ -31,9 +35,6 @@ which redis?
   site-redis-b654f56d4-55kvk
 ```
 
-[![Patreon][icon_patreon]](https://www.patreon.com/octolab)
-[![License][icon_license]](LICENSE)
-
 ## Roadmap
 
 - [ ] v1: [MVP][project_v1]
@@ -54,11 +55,15 @@ which redis?
 
 made with ❤️ by [OctoLab](https://www.octolab.org/)
 
+[icon_build]:      https://travis-ci.org/kamilsk/forward.svg?branch=master
 [icon_license]:    https://img.shields.io/badge/license-MIT-blue.svg
 [icon_patreon]:    https://img.shields.io/badge/patreon-donate-orange.svg
 [icon_tw_author]:  https://img.shields.io/badge/author-%40kamilsk-blue.svg
 [icon_tw_sponsor]: https://img.shields.io/badge/sponsor-%40octolab-blue.svg
 [icon_twitter]:    https://img.shields.io/twitter/url/http/shields.io.svg?style=social
+
+[page_build]:      https://travis-ci.org/kamilsk/forward
+[page_promo]:      https://github.com/kamilsk/forward
 
 [project_v1]:      https://github.com/kamilsk/forward/projects/1
 [project_v1_dl]:   https://github.com/kamilsk/forward/milestone/1
