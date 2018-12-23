@@ -29,7 +29,7 @@ It's so boring... （╯°□°）╯︵┻━┻
 I want to
 
 ```bash
-$ forward postgresql 5432:5432 redis 6379:6379
+$ forward postgresql 5432 redis 6379:6379
 which redis?
 > catalog-redis-76bbdf658b-4zdwc
   site-redis-b654f56d4-55kvk
@@ -59,9 +59,9 @@ $ brew install kamilsk/tap/forward
 ### Binary
 
 ```bash
-$ export REQ_VER=0.1.0  # all available versions are on https://github.com/kamilsk/forward/releases/
-$ export REQ_OS=Linux   # macOS is also available
-$ export REQ_ARCH=64bit # 32bit is also available
+$ REQ_VER=0.1.0  # all available versions are on https://github.com/kamilsk/forward/releases/
+$ REQ_OS=Linux   # macOS is also available
+$ REQ_ARCH=64bit # 32bit is also available
 # wget -q -O forward.tar.gz
 $ curl -sL -o forward.tar.gz \
        https://github.com/kamilsk/forward/releases/download/"${REQ_VER}/forward_${REQ_VER}_${REQ_OS}-${REQ_ARCH}".tar.gz
