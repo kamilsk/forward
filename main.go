@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"os/signal"
 	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -16,7 +17,16 @@ import (
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
+var (
+	commit  = "none"
+	date    = "unknown"
+	version = "dev"
+)
+
 func main() {
+	_, _ = fmt.Fprintf(os.Stderr,
+		"Version %s (commit: %s, build date: %s, go version: %s, compiler: %s, platform: %s/%s)\n",
+		version, commit, date, runtime.Version(), runtime.Compiler, runtime.GOOS, runtime.GOARCH)
 	go func() {
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, os.Interrupt)
