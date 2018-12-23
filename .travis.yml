@@ -1,0 +1,25 @@
+language: go
+
+go:
+- master
+- 1.x
+- 1.10.x
+- 1.11.x
+
+matrix:
+  fast_finish: true
+
+sudo: false
+
+script:
+- go test -v -race -timeout=1s ./...
+
+env:
+- META=github.com/kamilsk/forward
+
+after_success:
+- echo $TRAVIS_GO_VERSION ":" $TRAVIS_TAG
+- if [[ $TRAVIS_GO_VERSION == 1.11* ]] && [ -n "$TRAVIS_TAG" ]; then curl -sL https://git.io/goreleaser | bash; fi
+
+notifications:
+  slack: octolab:1eMS7IqOArBipiu31jYVd0cN
