@@ -71,8 +71,17 @@ $ tar xf forward.tar.gz -C "${GOPATH}"/bin/ && rm forward.tar.gz
 ### From source code
 
 ```bash
+# using standard go tools
 $ go get -u github.com/kamilsk/forward
+# or using egg tool
+$ egg github.com/kamilsk/forward -- go install .
+# with mirror
+$ egg bitbucket.org/kamilsk/forward -- go install .
 ```
+
+> [egg](https://github.com/kamilsk/egg)<sup id="anchor-egg">[1](#egg)</sup> is an `extended go get`.
+
+<sup id="egg">1</sup> The project is still in prototyping.[↩](#anchor-egg)
 
 ---
 
