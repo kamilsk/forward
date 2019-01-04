@@ -14,6 +14,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/gops/agent"
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
@@ -34,6 +35,9 @@ func main() {
 		signal.Stop(c)
 		fmt.Println()
 		os.Exit(0)
+	}()
+	go func() {
+		_ = agent.Listen(agent.Options{ShutdownCleanup: true})
 	}()
 	flag.Parse()
 	handle(flag.Args())
