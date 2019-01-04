@@ -1,3 +1,5 @@
+# github.com/bcicen/grmon v0.0.0-20180322004815-9e5e49d99f7c
+github.com/bcicen/grmon/agent
 # github.com/google/gops v0.3.5
 github.com/google/gops/agent
 github.com/google/gops/internal

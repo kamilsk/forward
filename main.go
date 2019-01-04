@@ -14,6 +14,7 @@ import (
 	"strings"
 	"time"
 
+	grmon "github.com/bcicen/grmon/agent"
 	"github.com/google/gops/agent"
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
@@ -36,9 +37,8 @@ func main() {
 		fmt.Println()
 		os.Exit(0)
 	}()
-	go func() {
-		_ = agent.Listen(agent.Options{ShutdownCleanup: true})
-	}()
+	go func() { _ = agent.Listen(agent.Options{ShutdownCleanup: true}) }()
+	go func() { grmon.Start() }()
 	flag.Parse()
 	handle(flag.Args())
 	scanner := bufio.NewScanner(os.Stdin)

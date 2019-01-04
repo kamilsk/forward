@@ -2,6 +2,7 @@ module github.com/kamilsk/forward
 
 require (
 	github.com/Netflix/go-expect v0.0.0-20180928190340-9d1f4485533b // indirect
+	github.com/bcicen/grmon v0.0.0-20180322004815-9e5e49d99f7c
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/google/gops v0.3.5
 	github.com/hinshun/vt10x v0.0.0-20180809195222-d55458df857c // indirect
