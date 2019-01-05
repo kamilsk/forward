@@ -3,7 +3,6 @@ language: go
 go:
 - master
 - 1.x
-- 1.10.x
 - 1.11.x
 
 matrix:
@@ -15,7 +14,7 @@ script:
 - go test -v -race -timeout=1s ./...
 
 env:
-- META=github.com/kamilsk/forward
+- META=github.com/kamilsk/forward/internal/cmd/version
 
 after_success:
 - echo $TRAVIS_GO_VERSION ":" $TRAVIS_TAG
