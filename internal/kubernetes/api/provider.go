@@ -10,7 +10,7 @@ func New() *provider {
 type provider struct{}
 
 // Find tries to find pods suitable by the pattern.
-func (*provider) Find(string) []kubernetes.Pod {
+func (*provider) Find(string) (kubernetes.Pods, error) {
 	panic("implement me")
 }
 

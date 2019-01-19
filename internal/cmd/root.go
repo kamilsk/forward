@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
@@ -13,6 +12,9 @@ import (
 
 	"github.com/kamilsk/forward/internal/cmd/completion"
 	"github.com/kamilsk/forward/internal/cmd/version"
+	"github.com/kamilsk/forward/internal/kubernetes"
+	"github.com/kamilsk/forward/internal/kubernetes/cli"
+	"github.com/kamilsk/forward/internal/process"
 	"github.com/spf13/cobra"
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
@@ -21,7 +23,8 @@ import (
 func New() *cobra.Command {
 	cmd := &cobra.Command{
 		Run: func(cmd *cobra.Command, args []string) {
-			handle(args)
+			kubectl := cli.New(process.New())
+			handle(kubectl, args)
 			scanner := bufio.NewScanner(os.Stdin)
 			scanner.Split(bufio.ScanLines)
 			for scanner.Scan() {
@@ -34,15 +37,23 @@ func New() *cobra.Command {
 					continue
 				}
 				pod, ports := args[0], convert(args[1:])
-				options := find(pod)
-				if len(options) == 0 {
-					_, _ = fmt.Fprintf(os.Stderr, "Pod not found by criteria %q\n", pod)
-					continue
+
+				{
+					options, err := kubectl.Find(pod)
+					if err != nil {
+						_, _ = fmt.Fprintf(os.Stderr, "Tried to find a pod by the pattern %q: %+v\n", pod, err)
+						continue
+					}
+					if options.IsEmpty() {
+						_, _ = fmt.Fprintf(os.Stderr, "Pod not found by criteria %q\n", pod)
+						continue
+					}
+					pod = options.Default().String()
+					if len(options) > 1 {
+						pod = define(options)
+					}
 				}
-				pod = options[0]
-				if len(options) > 1 {
-					pod = define(options)
-				}
+
 				go forward(pod, ports)
 				time.Sleep(50 * time.Millisecond)
 			}
@@ -52,7 +63,7 @@ func New() *cobra.Command {
 	return cmd
 }
 
-func handle(args []string) {
+func handle(kubectl kubernetes.Interface, args []string) {
 	is := regexp.MustCompile(`^\d+(?::\d+)?$`)
 	entries := make([][]string, 0, len(args)/2)
 	for len(args) > 0 {
@@ -81,14 +92,23 @@ func handle(args []string) {
 	}
 	for _, args := range entries {
 		pod, ports := args[0], convert(args[1:])
-		options := find(pod)
-		if len(options) == 0 {
-			panic(fmt.Sprintf("Pod not found by criteria %q", pod))
+
+		{
+			options, err := kubectl.Find(pod)
+			if err != nil {
+				_, _ = fmt.Fprintf(os.Stderr, "Tried to find a pod by the pattern %q: %+v\n", pod, err)
+				continue
+			}
+			if options.IsEmpty() {
+				_, _ = fmt.Fprintf(os.Stderr, "Pod not found by criteria %q\n", pod)
+				continue
+			}
+			pod = options.Default().String()
+			if len(options) > 1 {
+				pod = define(options)
+			}
 		}
-		pod = options[0]
-		if len(options) > 1 {
-			pod = define(options)
-		}
+
 		go forward(pod, ports)
 		time.Sleep(50 * time.Millisecond)
 	}
@@ -118,14 +138,14 @@ func convert(raw []string) map[int16]int16 {
 	return forwarding
 }
 
-func define(options []string) string {
+func define(options kubernetes.Pods) string {
 	questions := []*survey.Question{
 		{
 			Name: "pod",
 			Prompt: &survey.Select{
 				Message: "Choose a pod:",
-				Options: options,
-				Default: options[0],
+				Options: options.AsString(),
+				Default: options.Default().String(),
 			},
 		},
 	}
@@ -136,16 +156,6 @@ func define(options []string) string {
 		panic(err)
 	}
 	return answer.Pod
-}
-
-func find(name string) []string {
-	options := make([]string, 0, 4)
-	for _, pod := range pods() {
-		if strings.Contains(pod, name) {
-			options = append(options, pod)
-		}
-	}
-	return options
 }
 
 func forward(pod string, ports map[int16]int16) {
@@ -159,25 +169,4 @@ func forward(pod string, ports map[int16]int16) {
 	if err := cmd.Run(); err != nil {
 		panic(err)
 	}
-}
-
-func pods() []string {
-	buf := bytes.NewBuffer(nil)
-	scanner := bufio.NewScanner(buf)
-	scanner.Split(bufio.ScanLines)
-	cmd := exec.Command("kubectl", "get", "pod")
-	cmd.Stdout = buf
-	if err := cmd.Run(); err != nil {
-		panic(err)
-	}
-	_ = scanner.Scan() // skip header "NAME READY STATUS RESTARTS AGE"
-	pods := make([]string, 0, 10)
-	for scanner.Scan() {
-		cols := strings.Split(scanner.Text(), " ")
-		if len(cols) < 1 {
-			panic("unexpected cols count")
-		}
-		pods = append(pods, cols[0])
-	}
-	return pods
 }
