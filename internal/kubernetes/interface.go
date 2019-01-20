@@ -33,16 +33,6 @@ func (port Port) String() string {
 	return strconv.Itoa(int(port))
 }
 
-// String returns string representation of the port number.
-func (port Local) String() string {
-	return strconv.Itoa(int(port))
-}
-
-// String returns string representation of the port number.
-func (port Remote) String() string {
-	return strconv.Itoa(int(port))
-}
-
 // Like compares the fully-qualified pod name with the pattern.
 func (pod Pod) Like(pattern string) bool {
 	return strings.Contains(pod.String(), pattern)

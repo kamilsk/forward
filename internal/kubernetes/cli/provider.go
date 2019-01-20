@@ -42,6 +42,7 @@ func (provider *provider) Forward(pod kubernetes.Pod, ports kubernetes.Mapping) 
 	args := make([]string, 0, len(ports)+1)
 	args = append(args, "port-forward", pod.String())
 	for local, remote := range ports {
+		var local, remote = kubernetes.Port(local), kubernetes.Port(remote)
 		args = append(args, strings.Join([]string{local.String(), remote.String()}, ":"))
 	}
 	return provider.cli.Start(provider.stderr, provider.stdout, kubectl, args...)
