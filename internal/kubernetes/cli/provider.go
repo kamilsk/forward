@@ -52,7 +52,7 @@ func (provider *provider) pods() ([]kubernetes.Pod, error) {
 	if err := provider.cli.Run(stdout, stderr, kubectl, "get", "pod"); err != nil {
 		return nil, err
 	}
-	scanner := bufio.NewScanner(stdout)
+	scanner := bufio.NewScanner(stderr)
 	scanner.Split(bufio.ScanLines)
 	if !scanner.Scan() && scanner.Err() != nil {
 		return nil, errors.Wrap(scanner.Err(), "tried to skip header")
