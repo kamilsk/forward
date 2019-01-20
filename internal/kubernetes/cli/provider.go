@@ -3,6 +3,7 @@ package cli
 import (
 	"bufio"
 	"bytes"
+	"io"
 	"strings"
 
 	"github.com/kamilsk/forward/internal/kubernetes"
@@ -12,12 +13,13 @@ import (
 const kubectl = "kubectl"
 
 // New returns new instance of Kubernetes provider above CLI.
-func New(cli ProcessManager) *provider {
-	return &provider{cli}
+func New(cli ProcessManager, stderr, stdout io.Writer) *provider {
+	return &provider{cli, stderr, stdout}
 }
 
 type provider struct {
-	cli ProcessManager
+	cli            ProcessManager
+	stderr, stdout io.Writer
 }
 
 // Find tries to find pods suitable by the pattern.

@@ -2,6 +2,14 @@ package kubernetes
 
 import "strings"
 
+// Interface defines a top-level behavior of Kubernetes provider (API or CLI).
+type Interface interface {
+	// Find tries to find pods suitable by the pattern.
+	Find(string) (Pods, error)
+	// Forward initiates the port forwarding process.
+	Forward(Pod, Mapping)
+}
+
 type (
 	// Port is a type for port number.
 	Port int16
@@ -16,14 +24,6 @@ type (
 	// Mapping specifies port forwarding rules.
 	Mapping map[Local]Remote
 )
-
-// Interface defines a top-level behavior of Kubernetes provider (API or CLI).
-type Interface interface {
-	// Find tries to find pods suitable by the pattern.
-	Find(string) (Pods, error)
-	// Forward initiates the port forwarding process.
-	Forward(Pod, Mapping)
-}
 
 // Like compares the fully-qualified pod name with the pattern.
 func (pod Pod) Like(pattern string) bool {

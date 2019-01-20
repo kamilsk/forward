@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"os"
 	"os/exec"
@@ -23,7 +24,9 @@ import (
 func New() *cobra.Command {
 	cmd := &cobra.Command{
 		Run: func(cmd *cobra.Command, args []string) {
-			kubectl := cli.New(process.New())
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+			kubectl := cli.New(process.New(ctx), cmd.OutOrStderr(), cmd.OutOrStdout())
 			handle(kubectl, args)
 			scanner := bufio.NewScanner(os.Stdin)
 			scanner.Split(bufio.ScanLines)
@@ -50,7 +53,7 @@ func New() *cobra.Command {
 					}
 					pod = options.Default().String()
 					if len(options) > 1 {
-						pod = define(options)
+						pod = refine(options)
 					}
 				}
 
@@ -105,7 +108,7 @@ func handle(kubectl kubernetes.Interface, args []string) {
 			}
 			pod = options.Default().String()
 			if len(options) > 1 {
-				pod = define(options)
+				pod = refine(options)
 			}
 		}
 
@@ -138,7 +141,7 @@ func convert(raw []string) map[int16]int16 {
 	return forwarding
 }
 
-func define(options kubernetes.Pods) string {
+func refine(options kubernetes.Pods) string {
 	questions := []*survey.Question{
 		{
 			Name: "pod",
