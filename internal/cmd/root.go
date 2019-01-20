@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
@@ -36,29 +35,38 @@ func New() *cobra.Command {
 					continue
 				}
 				if len(args) < 2 {
-					_, _ = fmt.Fprintln(os.Stderr, "Please enter a short or full pod name and its ports in format [local:]remote")
+					_, _ = fmt.Fprintln(os.Stderr,
+						"Please enter a short or full pod name and its ports in format [local:]remote")
 					continue
 				}
-				pod, ports := args[0], convert(args[1:])
-
+				pattern, ports := args[0], convert(args[1:])
 				{
-					options, err := kubectl.Find(pod)
+					options, err := kubectl.Find(pattern)
 					if err != nil {
-						_, _ = fmt.Fprintf(os.Stderr, "Tried to find a pod by the pattern %q: %+v\n", pod, err)
+						_, _ = fmt.Fprintf(os.Stderr,
+							"Tried to find a pod by the pattern %q: %+v\n",
+							pattern, err)
 						continue
 					}
-					if options.IsEmpty() {
-						_, _ = fmt.Fprintf(os.Stderr, "Pod not found by criteria %q\n", pod)
+					if len(options) == 0 {
+						_, _ = fmt.Fprintf(os.Stderr,
+							"Pod not found by the pattern %q\n",
+							pattern)
 						continue
 					}
-					pod = options.Default().String()
+					pod := options.Default()
 					if len(options) > 1 {
 						pod = refine(options)
 					}
+					go func() {
+						if err := kubectl.Forward(pod, ports); err != nil {
+							_, _ = fmt.Fprintf(os.Stderr,
+								"Tried to forward ports %+v for pod %s: %+v\n",
+								options, pod, err)
+						}
+					}()
+					time.Sleep(50 * time.Millisecond)
 				}
-
-				go forward(pod, ports)
-				time.Sleep(50 * time.Millisecond)
 			}
 		},
 	}
@@ -89,36 +97,46 @@ func handle(kubectl kubernetes.Interface, args []string) {
 			entry = append(entry, port)
 		}
 		if len(entry) == 1 {
-			panic(fmt.Sprintf("Please provide the %q pod's ports in format [local:]remote", entry[0]))
+			panic(fmt.Sprintf(
+				"Please provide the %q pod's ports in format [local:]remote",
+				entry[0]))
 		}
 		entries = append(entries, entry)
 	}
 	for _, args := range entries {
-		pod, ports := args[0], convert(args[1:])
-
+		pattern, ports := args[0], convert(args[1:])
 		{
-			options, err := kubectl.Find(pod)
+			options, err := kubectl.Find(pattern)
 			if err != nil {
-				_, _ = fmt.Fprintf(os.Stderr, "Tried to find a pod by the pattern %q: %+v\n", pod, err)
+				_, _ = fmt.Fprintf(os.Stderr,
+					"Tried to find a pod by the pattern %q: %+v\n",
+					pattern, err)
 				continue
 			}
-			if options.IsEmpty() {
-				_, _ = fmt.Fprintf(os.Stderr, "Pod not found by criteria %q\n", pod)
+			if len(options) == 0 {
+				_, _ = fmt.Fprintf(os.Stderr,
+					"Pod not found by the pattern %q\n",
+					pattern)
 				continue
 			}
-			pod = options.Default().String()
+			pod := options.Default()
 			if len(options) > 1 {
 				pod = refine(options)
 			}
+			go func() {
+				if err := kubectl.Forward(pod, ports); err != nil {
+					_, _ = fmt.Fprintf(os.Stderr,
+						"Tried to forward ports %+v for pod %s: %+v\n",
+						ports, pod, err)
+				}
+			}()
+			time.Sleep(50 * time.Millisecond)
 		}
-
-		go forward(pod, ports)
-		time.Sleep(50 * time.Millisecond)
 	}
 }
 
-func convert(raw []string) map[int16]int16 {
-	forwarding := make(map[int16]int16)
+func convert(raw []string) kubernetes.Mapping {
+	forwarding := make(map[kubernetes.Local]kubernetes.Remote)
 	for _, row := range raw {
 		ports := strings.Split(row, ":")
 		if len(ports) != 1 && len(ports) != 2 {
@@ -133,15 +151,15 @@ func convert(raw []string) map[int16]int16 {
 			converted = append(converted, int16(value))
 		}
 		if len(ports) == 1 {
-			forwarding[converted[0]] = converted[0]
+			forwarding[kubernetes.Local(converted[0])] = kubernetes.Remote(converted[0])
 			continue
 		}
-		forwarding[converted[0]] = converted[1]
+		forwarding[kubernetes.Local(converted[0])] = kubernetes.Remote(converted[1])
 	}
 	return forwarding
 }
 
-func refine(options kubernetes.Pods) string {
+func refine(options kubernetes.Pods) kubernetes.Pod {
 	questions := []*survey.Question{
 		{
 			Name: "pod",
@@ -158,18 +176,5 @@ func refine(options kubernetes.Pods) string {
 	if err := survey.Ask(questions, &answer); err != nil {
 		panic(err)
 	}
-	return answer.Pod
-}
-
-func forward(pod string, ports map[int16]int16) {
-	args := make([]string, 0, len(ports)+1)
-	args = append(args, "port-forward", pod)
-	for local, remote := range ports {
-		args = append(args, strings.Join([]string{strconv.Itoa(int(local)), strconv.Itoa(int(remote))}, ":"))
-	}
-	cmd := exec.Command("kubectl", args...)
-	cmd.Stderr, cmd.Stdout = os.Stderr, os.Stdout
-	if err := cmd.Run(); err != nil {
-		panic(err)
-	}
+	return kubernetes.Pod(answer.Pod)
 }

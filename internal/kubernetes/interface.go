@@ -1,13 +1,16 @@
 package kubernetes
 
-import "strings"
+import (
+	"strconv"
+	"strings"
+)
 
 // Interface defines a top-level behavior of Kubernetes provider (API or CLI).
 type Interface interface {
 	// Find tries to find pods suitable by the pattern.
 	Find(string) (Pods, error)
 	// Forward initiates the port forwarding process.
-	Forward(Pod, Mapping)
+	Forward(Pod, Mapping) error
 }
 
 type (
@@ -24,6 +27,21 @@ type (
 	// Mapping specifies port forwarding rules.
 	Mapping map[Local]Remote
 )
+
+// String returns string representation of the port number.
+func (port Port) String() string {
+	return strconv.Itoa(int(port))
+}
+
+// String returns string representation of the port number.
+func (port Local) String() string {
+	return strconv.Itoa(int(port))
+}
+
+// String returns string representation of the port number.
+func (port Remote) String() string {
+	return strconv.Itoa(int(port))
+}
 
 // Like compares the fully-qualified pod name with the pattern.
 func (pod Pod) Like(pattern string) bool {
@@ -51,9 +69,4 @@ func (pods Pods) Default() Pod {
 		pod = pods[0]
 	}
 	return pod
-}
-
-// IsEmpty checks that the list is empty or not.
-func (pods Pods) IsEmpty() bool {
-	return len(pods) == 0
 }

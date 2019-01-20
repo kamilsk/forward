@@ -15,6 +15,6 @@ func (*provider) Find(string) (kubernetes.Pods, error) {
 }
 
 // Forward initiates the port forwarding process.
-func (*provider) Forward(kubernetes.Pod, kubernetes.Mapping) {
+func (*provider) Forward(kubernetes.Pod, kubernetes.Mapping) error {
 	panic("implement me")
 }

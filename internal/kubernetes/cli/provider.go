@@ -22,7 +22,7 @@ type provider struct {
 	stderr, stdout io.Writer
 }
 
-// Find tries to find pods suitable by the pattern.
+// Find tries to find suitable pods by the pattern.
 func (provider *provider) Find(pattern string) (kubernetes.Pods, error) {
 	pods, err := provider.pods()
 	if err != nil {
@@ -38,8 +38,13 @@ func (provider *provider) Find(pattern string) (kubernetes.Pods, error) {
 }
 
 // Forward initiates the port forwarding process.
-func (*provider) Forward(kubernetes.Pod, kubernetes.Mapping) {
-	panic("implement me")
+func (provider *provider) Forward(pod kubernetes.Pod, ports kubernetes.Mapping) error {
+	args := make([]string, 0, len(ports)+1)
+	args = append(args, "port-forward", pod.String())
+	for local, remote := range ports {
+		args = append(args, strings.Join([]string{local.String(), remote.String()}, ":"))
+	}
+	return provider.cli.Start(provider.stderr, provider.stdout, kubectl, args...)
 }
 
 func (provider *provider) pods() ([]kubernetes.Pod, error) {
