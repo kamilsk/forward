@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
+	"net/http"
+	_ "net/http/pprof"
 	"os"
 	"os/signal"
 
-	grmon "github.com/bcicen/grmon/agent"
 	"github.com/google/gops/agent"
 	"github.com/kamilsk/forward/internal/cmd"
 	executor "github.com/kamilsk/forward/internal/executor/cli"
@@ -25,7 +26,7 @@ func main() {
 		os.Exit(0)
 	}()
 	go func() { _ = agent.Listen(agent.Options{ShutdownCleanup: true}) }()
-	go func() { grmon.Start() }()
+	go func() { _ = http.ListenAndServe(":1234", nil) }()
 
 	if err := cmd.New(provider.New(executor.New(ctx), os.Stderr, os.Stdin)).Execute(); err != nil {
 		fmt.Println(err)

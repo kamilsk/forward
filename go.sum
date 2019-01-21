@@ -1,7 +1,5 @@
 github.com/Netflix/go-expect v0.0.0-20180928190340-9d1f4485533b h1:sSQK05nvxs4UkgCJaxihteu+r+6ela3dNMm7NVmsS3c=
 github.com/Netflix/go-expect v0.0.0-20180928190340-9d1f4485533b/go.mod h1:oX5x61PbNXchhh0oikYAH+4Pcfw5LKv21+Jnpr6r6Pc=
-github.com/bcicen/grmon v0.0.0-20180322004815-9e5e49d99f7c h1:JRvjo0TzkNJCSOa7EWtbIAdrmBUbLiY3cfefOYBFa0E=
-github.com/bcicen/grmon v0.0.0-20180322004815-9e5e49d99f7c/go.mod h1:KEaJdcTbyvaT6Oyx9bbHwMVXNy9MTe7loXHNvaS+4Rg=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/google/gops v0.3.5 h1:SIWvPLiYvy5vMwjxB3rVFTE4QBhUFj2KKWr3Xm7CKhw=
