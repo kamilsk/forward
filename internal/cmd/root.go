@@ -87,7 +87,12 @@ func process(kubectl kubernetes.Interface, pattern string, args ...string) {
 	}
 	pod := options.Default()
 	if len(options) > 1 {
-		pod = refine(options)
+		choice, err := refine(options.Default().String(), options.AsStrings()...)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "An error occurred while choosing the pod: %+v\n", err)
+			return
+		}
+		pod = kubernetes.Pod(choice)
 	}
 	go func() {
 		if err := kubectl.Forward(pod, ports); err != nil {
@@ -99,22 +104,22 @@ func process(kubectl kubernetes.Interface, pattern string, args ...string) {
 	time.Sleep(50 * time.Millisecond)
 }
 
-func refine(options kubernetes.Pods) kubernetes.Pod {
+func refine(defaults string, options ...string) (string, error) {
 	questions := []*survey.Question{
 		{
 			Name: "pod",
 			Prompt: &survey.Select{
 				Message: "Choose a pod:",
-				Options: options.AsStrings(),
-				Default: options.Default().String(),
+				Options: options,
+				Default: defaults,
 			},
 		},
 	}
 	answer := struct {
-		Pod string `survey:"color"`
+		Pod string `survey:"pod"`
 	}{}
 	if err := survey.Ask(questions, &answer); err != nil {
-		panic(err)
+		return answer.Pod, err
 	}
-	return kubernetes.Pod(answer.Pod)
+	return answer.Pod, nil
 }
