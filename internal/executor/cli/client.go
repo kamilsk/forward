@@ -1,4 +1,4 @@
-package process
+package cli
 
 import (
 	"context"
@@ -26,9 +26,7 @@ type manager struct {
 func (manager *manager) Run(stderr, stdout io.Writer, command string, args ...string) error {
 	cmd := exec.CommandContext(manager.ctx, command, args...)
 	cmd.Stderr, cmd.Stdout = stderr, stdout
-	return errors.Wrapf(cmd.Run(),
-		"tried to start the specified command %s with args %+v",
-		command, args)
+	return errors.Wrapf(cmd.Run(), "tried to start the specified command %s with args %+v", command, args)
 }
 
 // Start starts the process in the background.
@@ -36,9 +34,7 @@ func (manager *manager) Start(stderr, stdout io.Writer, command string, args ...
 	cmd := exec.CommandContext(manager.ctx, command, args...)
 	cmd.Stderr, cmd.Stdout = stderr, stdout
 	if err := cmd.Start(); err != nil {
-		return errors.Wrapf(err,
-			"tried to start the specified command %s with args %+v in background",
-			command, args)
+		return errors.Wrapf(err, "tried to start the specified command %s with args %+v in background", command, args)
 	}
 	go manager.store(cmd).wait(cmd)
 	return nil
@@ -61,9 +57,7 @@ func (manager *manager) store(cmd *exec.Cmd) *manager {
 func (manager *manager) wait(cmd *exec.Cmd) {
 	err := cmd.Wait()
 	if err != nil {
-		_, _ = fmt.Fprintf(cmd.Stderr,
-			"an error occurred while waiting for the subprocess execution: %+v\n",
-			err)
+		_, _ = fmt.Fprintf(cmd.Stderr, "An error occurred while waiting for the subprocess execution: %+v\n", err)
 	}
 	manager.remove(cmd)
 }

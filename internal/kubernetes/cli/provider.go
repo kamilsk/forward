@@ -13,12 +13,12 @@ import (
 const kubectl = "kubectl"
 
 // New returns new instance of Kubernetes provider above CLI.
-func New(cli ProcessManager, stderr, stdout io.Writer) *provider {
+func New(cli CLI, stderr, stdout io.Writer) *provider {
 	return &provider{cli, stderr, stdout}
 }
 
 type provider struct {
-	cli            ProcessManager
+	cli            CLI
 	stderr, stdout io.Writer
 }
 
@@ -45,7 +45,7 @@ func (provider *provider) Forward(pod kubernetes.Pod, ports kubernetes.Mapping) 
 		var local, remote = kubernetes.Port(local), kubernetes.Port(remote)
 		args = append(args, strings.Join([]string{local.String(), remote.String()}, ":"))
 	}
-	return provider.cli.Start(provider.stderr, provider.stdout, kubectl, args...)
+	return provider.cli.Run(provider.stderr, provider.stdout, kubectl, args...)
 }
 
 func (provider *provider) pods() ([]kubernetes.Pod, error) {
