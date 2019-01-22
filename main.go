@@ -7,6 +7,7 @@ import (
 	_ "net/http/pprof"
 	"os"
 	"os/signal"
+	"time"
 
 	"github.com/google/gops/agent"
 	"github.com/kamilsk/forward/internal/cmd"
@@ -20,7 +21,11 @@ func main() {
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, os.Interrupt)
 		<-c
+
 		cancel()
+		time.Sleep(50 * time.Millisecond) // add a possibility of shutting down subprocesses
+		// TODO make it better using a callback
+
 		signal.Stop(c)
 		fmt.Println()
 		os.Exit(0)
