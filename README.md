@@ -1,6 +1,6 @@
 > # 🎳 forward
 >
-> `forward` - extended `kubectl port-forward` - multiple port forwarding simultaneously.
+> `forward` - extended `kubectl port-forward` - reliable multiple port forwarding.
 
 [![Patreon][icon_patreon]](https://www.patreon.com/octolab)
 [![Build Status][icon_build]][page_build]
