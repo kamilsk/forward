@@ -50,17 +50,17 @@ func (provider *provider) Forward(pod kubernetes.Pod, ports kubernetes.Mapping) 
 
 func (provider *provider) pods() ([]kubernetes.Pod, error) {
 	stdout, stderr := new(bytes.Buffer), new(bytes.Buffer)
-	if err := provider.cli.Run(stdout, stderr, kubectl, "get", "pod"); err != nil {
+	if err := provider.cli.Run(stderr, stdout, kubectl, "get", "pod"); err != nil {
 		return nil, err
 	}
-	scanner := bufio.NewScanner(stderr)
+	scanner := bufio.NewScanner(stdout)
 	scanner.Split(bufio.ScanLines)
 	if !scanner.Scan() && scanner.Err() != nil {
 		return nil, errors.Wrap(scanner.Err(), "tried to skip header")
 	}
 	pods := make([]kubernetes.Pod, 0, 10)
 	for scanner.Scan() {
-		cols := strings.Split(scanner.Text(), " ")
+		cols := strings.Fields(scanner.Text())
 		if len(cols) < 1 {
 			return nil, errors.New("unexpected cols count")
 		}
