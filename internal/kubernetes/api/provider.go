@@ -3,11 +3,13 @@ package api
 import "github.com/kamilsk/forward/internal/kubernetes"
 
 // New returns new instance of Kubernetes provider above API.
-func New() *provider {
-	return &provider{}
+func New(api API) *provider {
+	return &provider{api}
 }
 
-type provider struct{}
+type provider struct {
+	api API
+}
 
 // Find tries to find pods suitable by the pattern.
 func (*provider) Find(string) (kubernetes.Pods, error) {
