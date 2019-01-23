@@ -3,6 +3,7 @@
 package cli_test
 
 import (
+	"bufio"
 	"io"
 	"io/ioutil"
 	"strings"
@@ -99,6 +100,22 @@ func TestProvider_Find(t *testing.T) {
 				assert.Empty(t, pods)
 			},
 		},
+		{"scan error", "postgres",
+			func() CLI {
+				mock := NewMockCLI(ctrl)
+				mock.EXPECT().
+					Run(gomock.Any(), gomock.Any(), "kubectl", "get", "pod").
+					Return(nil).
+					Do(func(stderr, stdout io.Writer, command string, args ...string) {
+						_, _ = stdout.Write([]byte(strings.Repeat(" ", bufio.MaxScanTokenSize)))
+					})
+				return mock
+			},
+			func(pods kubernetes.Pods, err error) {
+				assert.Error(t, err)
+				assert.Empty(t, pods)
+			},
+		},
 		{"unexpected cols count", "postgres",
 			func() CLI {
 				mock := NewMockCLI(ctrl)
@@ -120,6 +137,46 @@ func TestProvider_Find(t *testing.T) {
 		tc := test
 		t.Run(test.name, func(t *testing.T) {
 			tc.assert(New(tc.cli(), ioutil.Discard, ioutil.Discard).Find(tc.pattern))
+		})
+	}
+}
+
+func TestProvider_Forward(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	tests := []struct {
+		name   string
+		pod    kubernetes.Pod
+		ports  kubernetes.Mapping
+		cli    func() CLI
+		assert func(assert.TestingT, error, ...interface{}) bool
+	}{
+		{"normal case", "postgresql-c9b6dd5957-nm8gj", kubernetes.Mapping{5432: 5432},
+			func() CLI {
+				mock := NewMockCLI(ctrl)
+				mock.EXPECT().
+					Run(gomock.Any(), gomock.Any(), "kubectl", "port-forward", "postgresql-c9b6dd5957-nm8gj", "5432:5432").
+					Return(nil)
+				return mock
+			},
+			assert.NoError,
+		},
+		{"error case", "postgresql-c9b6dd5957-nm8gj", kubernetes.Mapping{5432: 5432},
+			func() CLI {
+				mock := NewMockCLI(ctrl)
+				mock.EXPECT().
+					Run(gomock.Any(), gomock.Any(), "kubectl", "port-forward", "postgresql-c9b6dd5957-nm8gj", "5432:5432").
+					Return(errors.New("test"))
+				return mock
+			},
+			assert.Error,
+		},
+	}
+	for _, test := range tests {
+		tc := test
+		t.Run(test.name, func(t *testing.T) {
+			tc.assert(t, New(tc.cli(), ioutil.Discard, ioutil.Discard).Forward(tc.pod, tc.ports))
 		})
 	}
 }
