@@ -33,7 +33,7 @@ func main() {
 	go func() { _ = agent.Listen(agent.Options{ShutdownCleanup: true}) }()
 	go func() { _ = http.ListenAndServe(":1234", nil) }()
 
-	if err := cmd.New(provider.New(executor.New(ctx), os.Stderr, os.Stdin)).Execute(); err != nil {
+	if err := cmd.New(provider.New(executor.New(ctx), os.Stderr, os.Stdout)).Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}

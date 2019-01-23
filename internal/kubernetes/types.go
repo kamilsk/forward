@@ -11,22 +11,16 @@ import (
 // Forwarding defines the format for port forwarding input.
 var Forwarding = regexp.MustCompile(`^\d+(?::\d+)?$`)
 
-const (
-	entrySeparator = "--"
-	portSeparator  = ":"
-)
+const portSeparator = ":"
 
 // NewMapping returns port forwarding rules.
-func NewMapping(rows ...string) (Mapping, error) {
-	mapping := make(Mapping, len(rows))
-	for _, row := range rows {
-		if row == entrySeparator {
-			continue
+func NewMapping(args ...string) (Mapping, error) {
+	mapping := make(Mapping, len(args))
+	for _, arg := range args {
+		if !Forwarding.MatchString(arg) {
+			return nil, errors.Errorf("expected port forwarding in format [local:]remote, obtained %s", arg)
 		}
-		if !Forwarding.MatchString(row) {
-			return nil, errors.Errorf("expected port forwarding in format [local:]remote, obtained %s", row)
-		}
-		ports := strings.Split(row, portSeparator)
+		ports := strings.Split(arg, portSeparator)
 		converted := make([]int16, 0, len(ports))
 		for _, port := range ports {
 			value, err := strconv.ParseInt(port, 10, 16)

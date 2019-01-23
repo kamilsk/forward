@@ -14,6 +14,8 @@ import (
 	survey "gopkg.in/AlecAivazis/survey.v1"
 )
 
+const entrySeparator = "--"
+
 // New returns new root command.
 func New(kubectl kubernetes.Interface) *cobra.Command {
 	cmd := &cobra.Command{
@@ -45,7 +47,7 @@ func handle(kubectl kubernetes.Interface, args []string) {
 		var name, port string
 		entry := make([]string, 0, 4)
 		name, args = args[0], args[1:]
-		if name == "--" {
+		if name == entrySeparator {
 			continue
 		}
 		if kubernetes.Forwarding.MatchString(name) {
@@ -71,7 +73,7 @@ func handle(kubectl kubernetes.Interface, args []string) {
 }
 
 func process(kubectl kubernetes.Interface, pattern string, args ...string) {
-	ports, err := kubernetes.NewMapping(args[1:]...)
+	ports, err := kubernetes.NewMapping(args...)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "An error occurred while parsing the ports: %+v", err)
 		return
