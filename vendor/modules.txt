@@ -1,3 +1,5 @@
+# github.com/davecgh/go-spew v1.1.1
+github.com/davecgh/go-spew/spew
 # github.com/golang/mock v1.2.0
 github.com/golang/mock/gomock
 # github.com/google/gops v0.3.5
@@ -20,10 +22,14 @@ github.com/mattn/go-isatty
 github.com/mgutz/ansi
 # github.com/pkg/errors v0.8.1
 github.com/pkg/errors
+# github.com/pmezard/go-difflib v1.0.0
+github.com/pmezard/go-difflib/difflib
 # github.com/spf13/cobra v0.0.3
 github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.3
 github.com/spf13/pflag
+# github.com/stretchr/testify v1.2.2
+github.com/stretchr/testify/assert
 # golang.org/x/sys v0.0.0-20181221065408-8ff4e546d48b
 golang.org/x/sys/unix
 # gopkg.in/AlecAivazis/survey.v1 v1.7.1
