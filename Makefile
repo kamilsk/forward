@@ -6,3 +6,9 @@ SHELL                     ?= /bin/bash -euo pipefail
 .PHONY: format
 format:
 	@(goimports --ungroup -w ./internal/ ./*.go)
+
+.PHOMY: deps
+deps:
+	@(go mod tidy)
+	@(go mod vendor)
+	@(go mod verify)
