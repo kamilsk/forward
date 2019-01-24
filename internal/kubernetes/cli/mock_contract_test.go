@@ -5,9 +5,10 @@
 package cli_test
 
 import (
-	gomock "github.com/golang/mock/gomock"
 	io "io"
 	reflect "reflect"
+
+	gomock "github.com/golang/mock/gomock"
 )
 
 // MockCLI is a mock of CLI interface
