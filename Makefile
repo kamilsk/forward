@@ -3,15 +3,22 @@ GO_TEST_COVERAGE_FILENAME ?= cover.out
 PACKAGES                  ?= go list ./... | grep -v vendor
 SHELL                     ?= /bin/bash -euo pipefail
 
-.PHONY: format
-format:
-	@(goimports --ungroup -w ./internal/ ./*.go)
-
 .PHOMY: deps
 deps:
 	@(go mod tidy)
 	@(go mod vendor)
 	@(go mod verify)
+
+.PHONY: format
+format:
+	@(goimports --ungroup -w ./internal/ ./*.go)
+
+.PHONY: generate
+generate:
+	@(go generate ./...)
+
+.PHONY: refresh
+refresh: generate format
 
 .PHONY: test
 test:             #| Runs tests with coverage and collects the result.

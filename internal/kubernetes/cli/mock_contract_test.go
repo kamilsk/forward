@@ -50,20 +50,3 @@ func (mr *MockCLIMockRecorder) Run(arg0, arg1, arg2 interface{}, arg3 ...interfa
 	varargs := append([]interface{}{arg0, arg1, arg2}, arg3...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Run", reflect.TypeOf((*MockCLI)(nil).Run), varargs...)
 }
-
-// Start mocks base method
-func (m *MockCLI) Start(arg0, arg1 io.Writer, arg2 string, arg3 ...string) error {
-	varargs := []interface{}{arg0, arg1, arg2}
-	for _, a := range arg3 {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "Start", varargs...)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Start indicates an expected call of Start
-func (mr *MockCLIMockRecorder) Start(arg0, arg1, arg2 interface{}, arg3 ...interface{}) *gomock.Call {
-	varargs := append([]interface{}{arg0, arg1, arg2}, arg3...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Start", reflect.TypeOf((*MockCLI)(nil).Start), varargs...)
-}
