@@ -1,6 +1,7 @@
 GO_TEST_COVERAGE_MODE     ?= count
 GO_TEST_COVERAGE_FILENAME ?= cover.out
-PACKAGES                  := go list ./... | grep -v vendor
+PACKAGES                  ?= go list ./... | grep -v vendor
+SHELL                     ?= /bin/bash -euo pipefail
 
 .PHONY: test-with-coverage-profile
 test-with-coverage-profile:   #| Runs tests with coverage and collects the result.
