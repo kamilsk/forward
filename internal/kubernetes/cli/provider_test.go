@@ -24,8 +24,7 @@ prefix-rabbitmq-85d8ff44df-b4lmt     1/1       Running   0          6d
 prefix-redis-76bbdf658b-bnc7b        1/1       Running   0          6d
 postgresql-c9b6dd5957-nm8gj          1/1       Running   0          6d
 rabbitmq-fd44ff8d58-tml4b            1/1       Running   0          6d
-redis-b856fdbb67-b7cnb               1/1       Running   0          6d
-`
+redis-b856fdbb67-b7cnb               1/1       Running   0          6d`
 	invalidPods = `
 NAME                                 READY     STATUS    RESTARTS   AGE
     `
