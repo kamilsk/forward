@@ -15,6 +15,12 @@ import (
 	"github.com/kamilsk/forward/internal/kubernetes/cli/client"
 )
 
+var (
+	commit  = "none"
+	date    = "unknown"
+	version = "dev"
+)
+
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	go func() {
@@ -33,7 +39,7 @@ func main() {
 	go func() { _ = agent.Listen(agent.Options{ShutdownCleanup: true}) }()
 	go func() { _ = http.ListenAndServe(":1234", nil) }()
 
-	if err := cmd.New(cli.New(client.New(ctx), os.Stderr, os.Stdout)).Execute(); err != nil {
+	if err := cmd.New(cli.New(client.New(ctx), os.Stderr, os.Stdout), commit, date, version).Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}

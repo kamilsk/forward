@@ -17,7 +17,7 @@ import (
 const entrySeparator = "--"
 
 // New returns new root command.
-func New(kubectl kubernetes.Interface) *cobra.Command {
+func New(kubectl kubernetes.Interface, commit, date, release string) *cobra.Command {
 	cmd := &cobra.Command{
 		Run: func(cmd *cobra.Command, args []string) {
 			handle(kubectl, args)
@@ -36,8 +36,9 @@ func New(kubectl kubernetes.Interface) *cobra.Command {
 				process(kubectl, args[0], args[1:]...)
 			}
 		},
+		Version: release,
 	}
-	cmd.AddCommand(completion.New(), version.New())
+	cmd.AddCommand(completion.New(), version.New(commit, date, release))
 	return cmd
 }
 
