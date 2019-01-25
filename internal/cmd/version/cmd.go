@@ -6,14 +6,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	commit  = "none"
-	date    = "unknown"
-	version = "dev"
-)
-
 // New returns new version command.
-func New() *cobra.Command {
+func New(commit, date, version string) *cobra.Command {
 	return &cobra.Command{
 		Use:   "version",
 		Short: "Show tool version",
