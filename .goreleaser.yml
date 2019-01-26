@@ -32,7 +32,7 @@ builds:
   - darwin
   - linux
   ldflags:
-  - -s -w -X {{.Env.META}}.version={{.Version}} -X {{.Env.META}}.commit={{.Commit}} -X {{.Env.META}}.date={{.Date}}
+  - -s -w -X commit={{.Commit}} -X date={{.Date}} -X version={{.Version}}
   main: ./main.go
 
 checksum: { name_template: checksums.txt }

@@ -7,8 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kamilsk/forward/internal/cmd/completion"
-	"github.com/kamilsk/forward/internal/cmd/version"
 	"github.com/kamilsk/forward/internal/kubernetes"
 	"github.com/spf13/cobra"
 	survey "gopkg.in/AlecAivazis/survey.v1"
@@ -17,7 +15,7 @@ import (
 const entrySeparator = "--"
 
 // New returns new root command.
-func New(kubectl kubernetes.Interface, commit, date, release string) *cobra.Command {
+func New(kubectl kubernetes.Interface) *cobra.Command {
 	cmd := &cobra.Command{
 		Run: func(cmd *cobra.Command, args []string) {
 			handle(kubectl, args)
@@ -36,9 +34,7 @@ func New(kubectl kubernetes.Interface, commit, date, release string) *cobra.Comm
 				process(kubectl, args[0], args[1:]...)
 			}
 		},
-		Version: release,
 	}
-	cmd.AddCommand(completion.New(), version.New(commit, date, release))
 	return cmd
 }
 

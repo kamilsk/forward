@@ -13,6 +13,7 @@ import (
 	"github.com/kamilsk/forward/internal/cmd"
 	"github.com/kamilsk/forward/internal/kubernetes/cli"
 	"github.com/kamilsk/forward/internal/kubernetes/cli/client"
+	"github.com/kamilsk/platform/cmd/cobra"
 )
 
 var (
@@ -39,7 +40,9 @@ func main() {
 	go func() { _ = agent.Listen(agent.Options{ShutdownCleanup: true}) }()
 	go func() { _ = http.ListenAndServe(":1234", nil) }()
 
-	if err := cmd.New(cli.New(client.New(ctx), os.Stderr, os.Stdout), commit, date, version).Execute(); err != nil {
+	root := cmd.New(cli.New(client.New(ctx), os.Stderr, os.Stdout))
+	root.AddCommand(cobra.NewCompletionCommand(), cobra.NewVersionCommand(commit, date, version))
+	if err := root.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}

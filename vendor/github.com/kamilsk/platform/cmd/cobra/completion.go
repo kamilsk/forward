@@ -1,7 +1,7 @@
-package completion
+package cobra
 
 import (
-	"github.com/kamilsk/go-kit/pkg/fn"
+	"github.com/kamilsk/platform/pkg/fn"
 	"github.com/spf13/cobra"
 )
 
@@ -10,8 +10,8 @@ const (
 	zshFormat  = "zsh"
 )
 
-// New returns new completion command.
-func New() *cobra.Command {
+// NewCompletionCommand returns new completion command.
+func NewCompletionCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "completion",
 		Short: "Print Bash or Zsh completion",

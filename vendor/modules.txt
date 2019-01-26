@@ -8,8 +8,9 @@ github.com/google/gops/internal
 github.com/google/gops/signal
 # github.com/inconshreveable/mousetrap v1.0.0
 github.com/inconshreveable/mousetrap
-# github.com/kamilsk/go-kit v0.0.0-20180924085458-bcfc2c1707de
-github.com/kamilsk/go-kit/pkg/fn
+# github.com/kamilsk/platform v0.0.0-20190126125726-25966bd9a196
+github.com/kamilsk/platform/cmd/cobra
+github.com/kamilsk/platform/pkg/fn
 # github.com/kardianos/osext v0.0.0-20170510131534-ae77be60afb1
 github.com/kardianos/osext
 # github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
@@ -28,7 +29,7 @@ github.com/pmezard/go-difflib/difflib
 github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.3
 github.com/spf13/pflag
-# github.com/stretchr/testify v1.2.2
+# github.com/stretchr/testify v1.3.0
 github.com/stretchr/testify/assert
 # golang.org/x/sys v0.0.0-20181221065408-8ff4e546d48b
 golang.org/x/sys/unix

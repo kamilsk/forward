@@ -3,6 +3,7 @@ GO_TEST_COVERAGE_FILENAME ?= cover.out
 PACKAGES                  ?= go list ./... | grep -v vendor
 SHELL                     ?= /bin/bash -euo pipefail
 
+
 .PHOMY: deps
 deps:
 	@(go mod tidy)
