@@ -11,8 +11,8 @@ github.com/hinshun/vt10x v0.0.0-20180809195222-d55458df857c h1:kp3AxgXgDOmIJFR7b
 github.com/hinshun/vt10x v0.0.0-20180809195222-d55458df857c/go.mod h1:DqJ97dSdRW1W22yXSB90986pcOyQ7r45iio1KN2ez1A=
 github.com/inconshreveable/mousetrap v1.0.0 h1:Z8tu5sraLXCXIcARxBp/8cbvlwVa7Z1NHg9XEKhtSvM=
 github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANytuPF1OarO4DADm73n8=
-github.com/kamilsk/platform v0.0.0-20190126125726-25966bd9a196 h1:/2CcjJIiLY0jubXHXKadrmHkFGVgWmTGchwqwORjMqs=
-github.com/kamilsk/platform v0.0.0-20190126125726-25966bd9a196/go.mod h1:ce8yUKd91u9a3SZSLyT3MKE77bQLV+13gaylTre2mS4=
+github.com/kamilsk/platform v1.0.0 h1:OBJT6Pz1zfokcH726d4NDmEHI8JrZd3Ux3CaFFyeykI=
+github.com/kamilsk/platform v1.0.0/go.mod h1:CpnY1s2Fm8OQ98/nbZQcn4lfY3A/VqaTRe7MB1KDuo8=
 github.com/kardianos/osext v0.0.0-20170510131534-ae77be60afb1 h1:PJPDf8OUfOK1bb/NeTKd4f1QXZItOX389VN3B6qC8ro=
 github.com/kardianos/osext v0.0.0-20170510131534-ae77be60afb1/go.mod h1:1NbS8ALrpOvjt0rHPNLyCIeMtbizbir8U//inJ+zuB8=
 github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 h1:Z9n2FFNUXsshfwJMBgNA0RU6/i7WVaAegv3PtuIHPMs=
@@ -42,3 +42,5 @@ golang.org/x/sys v0.0.0-20181221065408-8ff4e546d48b h1:a60GYo9Qky2H5qWOLCJY5953z
 golang.org/x/sys v0.0.0-20181221065408-8ff4e546d48b/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
 gopkg.in/AlecAivazis/survey.v1 v1.7.1 h1:mzQIVyOPSXJaQWi1m6AFCjrCEPIwQBSOn48Ri8ZpzAg=
 gopkg.in/AlecAivazis/survey.v1 v1.7.1/go.mod h1:2Ehl7OqkBl3Xb8VmC4oFW2bItAhnUfzIjrOzwRxCrOU=
+gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+gopkg.in/yaml.v2 v2.2.2/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=

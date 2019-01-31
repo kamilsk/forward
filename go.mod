@@ -6,7 +6,7 @@ require (
 	github.com/golang/mock v1.2.0
 	github.com/google/gops v0.3.5
 	github.com/hinshun/vt10x v0.0.0-20180809195222-d55458df857c // indirect
-	github.com/kamilsk/platform v0.0.0-20190126125726-25966bd9a196
+	github.com/kamilsk/platform v1.0.0
 	github.com/kardianos/osext v0.0.0-20170510131534-ae77be60afb1 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/kr/pty v1.1.3 // indirect

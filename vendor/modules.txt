@@ -8,9 +8,10 @@ github.com/google/gops/internal
 github.com/google/gops/signal
 # github.com/inconshreveable/mousetrap v1.0.0
 github.com/inconshreveable/mousetrap
-# github.com/kamilsk/platform v0.0.0-20190126125726-25966bd9a196
+# github.com/kamilsk/platform v1.0.0
 github.com/kamilsk/platform/cmd/cobra
 github.com/kamilsk/platform/pkg/fn
+github.com/kamilsk/platform/pkg/math
 # github.com/kardianos/osext v0.0.0-20170510131534-ae77be60afb1
 github.com/kardianos/osext
 # github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
