@@ -1,1 +1,5 @@
+# code coverage and quality reports
 *.out
+
+# binary
+/forward

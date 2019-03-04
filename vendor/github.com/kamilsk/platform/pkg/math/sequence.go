@@ -1,17 +1,47 @@
 package math
 
-import (
-	"math"
-	"sort"
-)
+import "sort"
+
+// Sequence returns an empty slice with the specified size.
+//
+//  for range Sequence(5) {
+//  	// do something five times
+//  }
+//
+func Sequence(size int) []struct{} {
+	return make([]struct{}, size)
+}
+
+// BatchSequence returns a specific slice for batch iteration on another slice.
+//
+//  batch, target := 100, make([]int, 1024)
+//  for step, end := range BatchSequence(len(target), batch) {
+//  	process(target[batch*step:end])
+//  }
+//
+func BatchSequence(size, batch int) []int {
+	count := size / batch
+	if size%batch != 0 {
+		count++
+	}
+	batches := make([]int, count)
+	for i := 0; i < count; i++ {
+		border := (i + 1) * batch
+		if border > size {
+			border = size
+		}
+		batches[i] = border
+	}
+	return batches
+}
 
 // Reduce wraps sequence to perform some aggregate operations above it.
 //
-//     func Acquire(places ...int) {
-//             for range Sequence(Reduce(places...).Sum()) {
-//                     semaphore <- struct{}{}
-//             }
-//     }
+//  func Acquire(places ...int) {
+//  	for range Sequence(Reduce(places...).Sum()) {
+//  		semaphore <- struct{}{}
+//  	}
+//  }
 //
 func Reduce(sequence ...int) interface {
 	// Average returns an average value of the sequence.
@@ -50,7 +80,7 @@ func (sequence reducer) Maximum() int {
 	if len(sequence) == 0 {
 		return 0
 	}
-	max := math.MinInt64
+	max := sequence[0]
 	for _, num := range sequence {
 		if num > max {
 			max = num
@@ -78,7 +108,7 @@ func (sequence reducer) Minimum() int {
 	if len(sequence) == 0 {
 		return 0
 	}
-	min := math.MaxInt64
+	min := sequence[0]
 	for _, num := range sequence {
 		if num < min {
 			min = num
@@ -94,14 +124,4 @@ func (sequence reducer) Sum() int {
 		sum += num
 	}
 	return sum
-}
-
-// Sequence returns an empty slice with the specified size.
-//
-//     for range Sequence(5) {
-//             // do something five times
-//     }
-//
-func Sequence(size int) []struct{} {
-	return make([]struct{}, size)
 }

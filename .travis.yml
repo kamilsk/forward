@@ -4,18 +4,20 @@ go:
 - master
 - 1.x
 - 1.11.x
-
-matrix:
-  fast_finish: true
+- 1.12.x
 
 sudo: false
 
+before_install:
+- export GO111MODULE=on
+- export GOFLAGS=-mod=vendor
+
 script:
-- go test -v -race -timeout=1s ./...
+- make test
 
 after_success:
 - echo $TRAVIS_GO_VERSION ":" $TRAVIS_TAG
-- if [[ $TRAVIS_GO_VERSION == 1.11* ]] && [ -n "$TRAVIS_TAG" ]; then curl -sL https://git.io/goreleaser | bash; fi
+- if [[ $TRAVIS_GO_VERSION == 1.12* ]] && [ -n "$TRAVIS_TAG" ]; then curl -sL https://git.io/goreleaser | bash; fi
 
 notifications:
   slack: octolab:1eMS7IqOArBipiu31jYVd0cN

@@ -4,25 +4,27 @@ archive:
   format: tar.gz
   name_template: "{{.Binary}}_{{.Version}}_{{.Os}}-{{.Arch}}"
   replacements:
-    386:     32bit
-    amd64:   64bit
-    darwin:  macOS
-    linux:   Linux
+    386:    32bit
+    amd64:  64bit
+
+    darwin: macOS
+    linux:  Linux
 
 brew:
   caveats: Use `forward pod [local:]remote`
   commit_author:
     name:  Kamil Samigullin
     email: kamil@samigullin.info
-  description: extended kubectl port-forward - multiple port forwarding simultaneously
+  description: Extended kubectl port-forward - multiple port forwarding simultaneously.
   folder: Formula
   github:
     name:  homebrew-tap
     owner: kamilsk
   homepage: https://github.com/kamilsk/forward
+  name: forward
 
-builds:
-- binary: forward
+build:
+  binary: forward
   env:
   - CGO_ENABLED=0
   goarch:
@@ -31,13 +33,10 @@ builds:
   goos:
   - darwin
   - linux
-  ldflags:
-  - -s -w -X commit={{.Commit}} -X date={{.Date}} -X version={{.Version}}
-  main: ./main.go
+  ldflags: -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+  main: .
 
 checksum: { name_template: checksums.txt }
-
-project_name: forward
 
 release:
   draft: false
