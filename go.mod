@@ -14,6 +14,6 @@ require (
 	github.com/spf13/cobra v0.0.3
 	github.com/stretchr/testify v1.3.0
 	golang.org/x/crypto v0.0.0-20190228161510-8dd112bcdc25 // indirect
-	golang.org/x/sys v0.0.0-20190303192550-c2f5717e611c // indirect
+	golang.org/x/sys v0.0.0-20190305064518-30e92a19ae4a // indirect
 	gopkg.in/AlecAivazis/survey.v1 v1.8.2
 )

@@ -32,7 +32,7 @@ github.com/spf13/cobra
 github.com/spf13/pflag
 # github.com/stretchr/testify v1.3.0
 github.com/stretchr/testify/assert
-# golang.org/x/sys v0.0.0-20190303192550-c2f5717e611c
+# golang.org/x/sys v0.0.0-20190305064518-30e92a19ae4a
 golang.org/x/sys/unix
 # gopkg.in/AlecAivazis/survey.v1 v1.8.2
 gopkg.in/AlecAivazis/survey.v1
