@@ -17,6 +17,7 @@ const entrySeparator = "--"
 // New returns new root command.
 func New(kubectl kubernetes.Interface) *cobra.Command {
 	cmd := &cobra.Command{
+		Short: "forward",
 		Run: func(cmd *cobra.Command, args []string) {
 			handle(kubectl, args)
 			scanner := bufio.NewScanner(os.Stdin)

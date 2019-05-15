@@ -15,18 +15,17 @@ before_install:
 - export CODECLIMATE=https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
 
 before_script:
-- if [[ $TRAVIS_GO_VERSION == 1.10* ]]; then curl -L $CODECLIMATE > ./cc-test-reporter; fi
-- if [[ $TRAVIS_GO_VERSION == 1.10* ]]; then chmod +x ./cc-test-reporter; fi
-- if [[ $TRAVIS_GO_VERSION == 1.10* ]]; then ./cc-test-reporter before-build; fi
+- echo $TRAVIS_GO_VERSION ":" $TRAVIS_TAG
+- if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then curl -L $CODECLIMATE > ./cc-test-reporter; fi
+- if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then chmod +x ./cc-test-reporter; fi
+- if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then ./cc-test-reporter before-build; fi
 
 script:
-- if [[ $TRAVIS_GO_VERSION == 1.10* ]]; then make test-with-coverage-profile; else make test; fi
-
-after_script:
-- if [[ $TRAVIS_GO_VERSION == 1.10* ]]; then ./cc-test-reporter after-build -t gocov --exit-code $TRAVIS_TEST_RESULT; fi
+- if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then make test-with-coverage-profile; else make test; fi
 
 after_success:
-- echo $TRAVIS_GO_VERSION ":" $TRAVIS_TAG
+- if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then ./cc-test-reporter after-build -t gocov --exit-code $TRAVIS_TEST_RESULT; fi
+- if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then rm ./cc-test-reporter; fi
 - if [[ $TRAVIS_GO_VERSION == 1.12* ]] && [ -n "$TRAVIS_TAG" ]; then curl -sL https://git.io/goreleaser | bash; fi
 
 notifications:

@@ -11,17 +11,17 @@ archive:
     linux:  Linux
 
 brew:
+  name: forward
   caveats: Use `forward pod [local:]remote`
+  description: Extended kubectl port-forward - reliable multiple port forwarding.
+  homepage: https://github.com/kamilsk/forward
   commit_author:
     name:  Kamil Samigullin
     email: kamil@samigullin.info
-  description: Extended kubectl port-forward - multiple port forwarding simultaneously.
   folder: Formula
   github:
     name:  homebrew-tap
     owner: kamilsk
-  homepage: https://github.com/kamilsk/forward
-  name: forward
 
 build:
   binary: forward

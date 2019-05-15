@@ -2,4 +2,5 @@
 *.out
 
 # binary
-/forward
+/bin/*
+!/bin/.gitkeep
