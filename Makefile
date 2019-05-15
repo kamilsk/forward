@@ -42,8 +42,8 @@ test-with-coverage-formatted: #| Runs tests with coverage and formats the result
 	@(go test -cover -timeout 1s  ./... | column -t | sort -r)
 
 .PHONY: test-with-coverage-profile
-test-with-coverage-profile:   #| Runs tests with coverage and collects the result.
-	@(go test -covermode count -coverprofile c.out -timeout 1s ./...)
+test-with-coverage-profile:
+	@go test -covermode count -coverprofile c.out -timeout 1s ./...
 
 .PHONY: test-with-coverage-profile-old
 test-with-coverage-profile-old:
@@ -71,6 +71,14 @@ sync:
 upgrade: sync update deps refresh test-with-coverage-formatted
 
 
+.PHONY: build
+build:
+	@go build -o bin/forward .
+
 .PHONY: install
 install:
-	@(go build -mod vendor -o forward . && chmod +x forward && echo "$$(pwd)/forward" && ./forward --help)
+	@go build -o $(GOPATH)/bin/forward .
+
+.PHONY: run
+run:
+	@echo not implemented yet

@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"unsafe"
 
-	isatty "github.com/mattn/go-isatty"
+	"github.com/mattn/go-isatty"
 )
 
 var (
