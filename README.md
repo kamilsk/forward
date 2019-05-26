@@ -2,9 +2,13 @@
 >
 > `forward` - extended `kubectl port-forward` - reliable multiple port forwarding.
 
-[![Patreon][icon_patreon]](https://www.patreon.com/octolab)
 [![Build Status][icon_build]][page_build]
-[![License][icon_license]](LICENSE)
+
+## The concept
+
+```bash
+$ forward postgresql 5432 redis 6379:6379
+```
 
 ## Motivation
 
@@ -85,17 +89,9 @@ $ egg bitbucket.org/kamilsk/forward -- go install .
 
 ---
 
-[![@kamilsk][icon_tw_author]](https://twitter.com/ikamilsk)
-[![@octolab][icon_tw_sponsor]](https://twitter.com/octolab_inc)
-
-made with ❤️ by [OctoLab](https://www.octolab.org/)
+made with ❤️ for everyone
 
 [icon_build]:      https://travis-ci.org/kamilsk/forward.svg?branch=master
-[icon_license]:    https://img.shields.io/badge/license-MIT-blue.svg
-[icon_patreon]:    https://img.shields.io/badge/patreon-donate-orange.svg
-[icon_tw_author]:  https://img.shields.io/badge/author-%40kamilsk-blue.svg
-[icon_tw_sponsor]: https://img.shields.io/badge/sponsor-%40octolab-blue.svg
-[icon_twitter]:    https://img.shields.io/twitter/url/http/shields.io.svg?style=social
 
 [page_build]:      https://travis-ci.org/kamilsk/forward
 [page_promo]:      https://github.com/kamilsk/forward
