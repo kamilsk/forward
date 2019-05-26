@@ -4,13 +4,16 @@
 
 [![Build Status][icon_build]][page_build]
 
-## The concept
+## 💡 Idea
 
 ```bash
 $ forward postgresql 5432 redis 6379:6379
 ```
 
-## Motivation
+Full description of the idea is available
+[here](https://www.notion.so/octolab/forward-94a09f0b2f6143d1b71d08edf3e52771?r=0b753cbf767346f5a6fd51194829a2f3).
+
+## 🏆 Motivation
 
 Instead of
 
@@ -39,20 +42,11 @@ which redis?
   site-redis-b654f56d4-55kvk
 ```
 
-## Roadmap
-
-- [ ] v1: [MVP][project_v1]
-  - [**Someday, 20xx**][project_v1_dl]
-  - Main concepts and working prototype.
-- [ ] v2: [Rate limiting][project_v2]
-  - [**Somehow, 20xx**][project_v2_dl]
-  - Better integration with [Kubernetes](https://kubernetes.io/).
-
-## Demo
+## 🤼‍♂️ How to
 
 [![asciicast](https://asciinema.org/a/217993.svg)](https://asciinema.org/a/217993)
 
-## Installation
+## 🧩 Installation
 
 ### Homebrew
 
@@ -83,7 +77,14 @@ $ egg github.com/kamilsk/forward -- go install .
 $ egg bitbucket.org/kamilsk/forward -- go install .
 ```
 
-> [egg](https://github.com/kamilsk/egg)<sup id="anchor-egg">[1](#egg)</sup> is an `extended go get`.
+> [egg][page_egg]<sup id="anchor-egg">[1](#egg)</sup> is an `extended go get`.
+
+### Bash and Zsh completions
+
+```bash
+$ forward completion -f bash > /path/to/bash_completion.d/forward.sh
+$ forward completion -f zsh  > /path/to/zsh-completions/_forward.zsh
+```
 
 <sup id="egg">1</sup> The project is still in prototyping.[↩](#anchor-egg)
 
@@ -95,8 +96,4 @@ made with ❤️ for everyone
 
 [page_build]:      https://travis-ci.org/kamilsk/forward
 [page_promo]:      https://github.com/kamilsk/forward
-
-[project_v1]:      https://github.com/kamilsk/forward/projects/1
-[project_v1_dl]:   https://github.com/kamilsk/forward/milestone/1
-[project_v2]:      https://github.com/kamilsk/forward/projects/2
-[project_v2_dl]:   https://github.com/kamilsk/forward/milestone/2
+[page_egg]:        https://github.com/kamilsk/egg
