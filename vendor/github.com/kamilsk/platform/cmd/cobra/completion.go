@@ -1,7 +1,6 @@
 package cobra
 
 import (
-	"github.com/kamilsk/platform/pkg/fn"
 	"github.com/spf13/cobra"
 )
 
@@ -15,21 +14,39 @@ func NewCompletionCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "completion",
 		Short: "Print Bash or Zsh completion",
-		RunE: func(cmd *cobra.Command, args []string) error {
-			root := cmd
-			for {
-				if !root.HasParent() {
-					break
-				}
-				root = root.Parent()
-			}
-			if cmd.Flag("format").Value.String() == bashFormat {
-				return root.GenBashCompletion(cmd.OutOrStdout())
-			}
-			return root.GenZshCompletion(cmd.OutOrStdout())
-		},
+		Long:  "Print Bash or Zsh completion.",
 	}
-	cmd.Flags().StringVarP(new(string), "format", "f", zshFormat, "output format, one of: bash|zsh")
-	fn.Must(func() error { return cmd.MarkFlagRequired("format") })
+	cmd.AddCommand(
+		&cobra.Command{
+			Use:   bashFormat,
+			Short: "Print Bash completion",
+			Long:  "Print Bash completion.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				root := cmd
+				for {
+					if !root.HasParent() {
+						break
+					}
+					root = root.Parent()
+				}
+				return root.GenBashCompletion(cmd.OutOrStdout())
+			},
+		},
+		&cobra.Command{
+			Use:   zshFormat,
+			Short: "Print Zsh completion",
+			Long:  "Print Zsh completion.",
+			RunE: func(cmd *cobra.Command, args []string) error {
+				root := cmd
+				for {
+					if !root.HasParent() {
+						break
+					}
+					root = root.Parent()
+				}
+				return root.GenZshCompletion(cmd.OutOrStdout())
+			},
+		},
+	)
 	return cmd
 }

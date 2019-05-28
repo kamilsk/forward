@@ -75,8 +75,8 @@ $ egg bitbucket.org/kamilsk/forward -- go install .
 ### Bash and Zsh completions
 
 ```bash
-$ forward completion -f bash > /path/to/bash_completion.d/forward.sh
-$ forward completion -f zsh  > /path/to/zsh-completions/_forward.zsh
+$ forward completion bash > /path/to/bash_completion.d/forward.sh
+$ forward completion zsh  > /path/to/zsh-completions/_forward.zsh
 ```
 
 <sup id="egg">1</sup> The project is still in prototyping.[↩](#anchor-egg)
