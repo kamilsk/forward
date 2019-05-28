@@ -57,23 +57,16 @@ $ brew install kamilsk/tap/forward
 ### Binary
 
 ```bash
-$ REQ_VER=0.1.0  # all available versions are on https://github.com/kamilsk/forward/releases/
-$ REQ_OS=Linux   # macOS is also available
-$ REQ_ARCH=64bit # 32bit is also available
-# wget -q -O forward.tar.gz
-$ curl -sL -o forward.tar.gz \
-       https://github.com/kamilsk/forward/releases/download/"${REQ_VER}/forward_${REQ_VER}_${REQ_OS}-${REQ_ARCH}".tar.gz
-$ tar xf forward.tar.gz -C "${GOPATH}"/bin/ && rm forward.tar.gz
+$ curl -sfL https://bit.ly/install-forward | bash
 ```
 
-### From source code
+### Source
 
 ```bash
-# using standard go tools
+# use standard go tools
 $ go get -u github.com/kamilsk/forward
-# or using egg tool
+# or use egg tool
 $ egg github.com/kamilsk/forward -- go install .
-# with mirror
 $ egg bitbucket.org/kamilsk/forward -- go install .
 ```
 

@@ -1,4 +1,5 @@
-archive:
+archives:
+- id: binary
   files:
   - LICENSE
   format: tar.gz
@@ -6,7 +7,6 @@ archive:
   replacements:
     386:    32bit
     amd64:  64bit
-
     darwin: macOS
     linux:  Linux
 
