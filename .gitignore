@@ -4,3 +4,7 @@
 # binary
 /bin/*
 !/bin/.gitkeep
+
+
+# Goland
+.idea
