@@ -1,6 +1,7 @@
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
 # github.com/golang/mock v1.3.1
+github.com/golang/mock/mockgen/model
 github.com/golang/mock/gomock
 # github.com/google/gops v0.3.6
 github.com/google/gops/agent
@@ -8,8 +9,6 @@ github.com/google/gops/internal
 github.com/google/gops/signal
 # github.com/inconshreveable/mousetrap v1.0.0
 github.com/inconshreveable/mousetrap
-# github.com/kamilsk/platform v0.15.0
-github.com/kamilsk/platform/cmd/cobra
 # github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 github.com/kardianos/osext
 # github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
@@ -24,15 +23,21 @@ github.com/mgutz/ansi
 github.com/pkg/errors
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
-# github.com/spf13/cobra v0.0.4
+# github.com/spf13/cobra v0.0.5
 github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.3
 github.com/spf13/pflag
-# github.com/stretchr/testify v1.3.0
+# github.com/stretchr/testify v1.4.0
 github.com/stretchr/testify/assert
-# golang.org/x/sys v0.0.0-20190528012530-adf421d2caf4
+# go.octolab.org v0.0.2
+go.octolab.org/os/shell
+# go.octolab.org/toolkit/cli v0.0.2
+go.octolab.org/toolkit/cli/cobra
+# golang.org/x/sys v0.0.0-20190222072716-a9d3bda3a223
 golang.org/x/sys/unix
 # gopkg.in/AlecAivazis/survey.v1 v1.8.4
 gopkg.in/AlecAivazis/survey.v1
 gopkg.in/AlecAivazis/survey.v1/core
 gopkg.in/AlecAivazis/survey.v1/terminal
+# gopkg.in/yaml.v2 v2.2.2
+gopkg.in/yaml.v2

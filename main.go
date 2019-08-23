@@ -10,10 +10,11 @@ import (
 	"time"
 
 	"github.com/google/gops/agent"
+	"go.octolab.org/toolkit/cli/cobra"
+
 	"github.com/kamilsk/forward/internal/cmd"
 	"github.com/kamilsk/forward/internal/kubernetes/cli"
 	"github.com/kamilsk/forward/internal/kubernetes/cli/client"
-	"github.com/kamilsk/platform/cmd/cobra"
 )
 
 var (
@@ -41,7 +42,7 @@ func main() {
 	go func() { _ = http.ListenAndServe(":1234", nil) }()
 
 	root := cmd.New(cli.New(client.New(ctx), os.Stderr, os.Stdout))
-	root.AddCommand(cobra.NewCompletionCommand(), cobra.NewVersionCommand(commit, date, version))
+	root.AddCommand(cobra.NewCompletionCommand(), cobra.NewVersionCommand(version, date, commit))
 	if err := root.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

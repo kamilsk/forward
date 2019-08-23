@@ -36,6 +36,7 @@ func (m *MockCLI) EXPECT() *MockCLIMockRecorder {
 
 // Run mocks base method
 func (m *MockCLI) Run(arg0, arg1 io.Writer, arg2 string, arg3 ...string) error {
+	m.ctrl.T.Helper()
 	varargs := []interface{}{arg0, arg1, arg2}
 	for _, a := range arg3 {
 		varargs = append(varargs, a)
@@ -47,6 +48,7 @@ func (m *MockCLI) Run(arg0, arg1 io.Writer, arg2 string, arg3 ...string) error {
 
 // Run indicates an expected call of Run
 func (mr *MockCLIMockRecorder) Run(arg0, arg1, arg2 interface{}, arg3 ...interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
 	varargs := append([]interface{}{arg0, arg1, arg2}, arg3...)
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Run", reflect.TypeOf((*MockCLI)(nil).Run), varargs...)
 }

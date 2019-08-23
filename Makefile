@@ -1,8 +1,12 @@
 SHELL       = /bin/bash -euo pipefail
-BIN         = $(shell basename $(shell pwd))
-PKGS        = go list ./... | grep -v vendor | grep -v ^_
+PKGS        = $(shell go list ./... | grep -v vendor)
 GO111MODULE = on
 GOFLAGS     = -mod=vendor
+TIMEOUT     = 1s
+BIN         = $(shell basename $(shell pwd))
+
+
+.DEFAULT_GOAL = test-with-coverage
 
 
 .PHONY: deps
@@ -16,11 +20,11 @@ update:
 
 .PHONY: format
 format:
-	@goimports -ungroup -w .
+	@goimports -local $(dirname $(go list -m)) -ungroup -w .
 
 .PHONY: generate
 generate:
-	@go generate ./...
+	@go generate $(PKGS)
 
 .PHONY: refresh
 refresh: generate format
@@ -28,11 +32,19 @@ refresh: generate format
 
 .PHONY: test
 test:
-	@go test -race -timeout 1s ./...
+	@go test -race -timeout $(TIMEOUT) $(PKGS)
+
+.PHONY: test-with-coverage
+test-with-coverage:
+	@go test -cover -timeout $(TIMEOUT) $(PKGS) | column -t | sort -r
 
 .PHONY: test-with-coverage-profile
 test-with-coverage-profile:
-	@go test -covermode count -coverprofile c.out -timeout 1s ./...
+	@go test -cover -covermode count -coverprofile c.out -timeout $(TIMEOUT) $(PKGS)
+
+.PHONY: test-smoke
+test-smoke:
+	@echo not implemented yet
 
 
 .PHONY: build
@@ -46,7 +58,3 @@ dist:
 .PHONY: install
 install:
 	@go build -o $(GOPATH)/bin/$(BIN) .
-
-.PHONY: run
-run:
-	@echo not implemented yet

@@ -1,4 +1,16 @@
+sudo:     false
 language: go
+
+cache:
+  directories:
+  - $HOME/.cache/go-build
+  - $HOME/gopath/pkg/mod
+
+env:
+  global:
+  - CODECLIMATE=https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
+  - GO111MODULE=on
+  - GOFLAGS=-mod=vendor
 
 go:
 - master
@@ -7,24 +19,18 @@ go:
 - 1.11.x
 - 1.12.x
 
-sudo: false
-
-before_install:
-- export GO111MODULE=on
-- export GOFLAGS=-mod=vendor
-- export CODECLIMATE=https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
-
 before_script:
-- echo $TRAVIS_GO_VERSION ":" $TRAVIS_TAG
-- if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then curl -L $CODECLIMATE > bin/cc-test-reporter; fi
-- if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then chmod +x bin/cc-test-reporter; fi
-- if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then bin/cc-test-reporter before-build; fi
+- if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then curl -L $CODECLIMATE > ./cc-test-reporter; fi
+- if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then chmod +x ./cc-test-reporter; fi
+- if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then ./cc-test-reporter before-build; fi
 
 script:
 - if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then make test-with-coverage-profile; else make test; fi
 
-after_success:
-- if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then bin/cc-test-reporter after-build -t gocov --exit-code $TRAVIS_TEST_RESULT; fi
+after_script:
+- if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then export EXIT_CODE=$TRAVIS_TEST_RESULT; fi
+- if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then export PREFIX=$(basename $(go list -m)); fi
+- if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then ./cc-test-reporter after-build -t gocov -p $PREFIX; fi
 - if [[ $TRAVIS_GO_VERSION == 1.12* ]] && [ -n "$TRAVIS_TAG" ]; then curl -sL https://git.io/goreleaser | bash; fi
 
 notifications:
