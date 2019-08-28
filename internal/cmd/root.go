@@ -7,9 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kamilsk/forward/internal/kubernetes"
 	"github.com/spf13/cobra"
 	survey "gopkg.in/AlecAivazis/survey.v1"
+
+	"github.com/kamilsk/forward/internal/kubernetes"
 )
 
 const entrySeparator = "--"
@@ -17,7 +18,9 @@ const entrySeparator = "--"
 // New returns new root command.
 func New(kubectl kubernetes.Interface) *cobra.Command {
 	cmd := &cobra.Command{
-		Short: "forward",
+		Use:   "forward",
+		Short: "extended `kubectl port-forward`",
+		Long:  "extended `kubectl port-forward` - reliable multiple port forwarding.",
 		Run: func(cmd *cobra.Command, args []string) {
 			handle(kubectl, args)
 			scanner := bufio.NewScanner(os.Stdin)

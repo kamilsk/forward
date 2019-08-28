@@ -6,8 +6,9 @@ import (
 	"io/ioutil"
 	"testing"
 
-	. "github.com/kamilsk/forward/internal/kubernetes/cli/client"
 	"github.com/stretchr/testify/assert"
+
+	. "github.com/kamilsk/forward/internal/kubernetes/cli/client"
 )
 
 func TestClient_Run(t *testing.T) {

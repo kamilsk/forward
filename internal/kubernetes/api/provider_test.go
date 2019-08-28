@@ -1,14 +1,15 @@
-//go:generate echo $PWD - $GOPACKAGE - $GOFILE
 //go:generate mockgen -package $GOPACKAGE -destination mock_contract_test.go github.com/kamilsk/forward/internal/kubernetes/api API
+//go:generate echo generated at $PWD/$GOFILE ($GOPACKAGE)
 package api_test
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
+
 	"github.com/kamilsk/forward/internal/kubernetes"
 	. "github.com/kamilsk/forward/internal/kubernetes/api"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestProvider_Find(t *testing.T) {

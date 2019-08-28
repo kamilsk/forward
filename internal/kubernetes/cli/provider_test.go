@@ -1,5 +1,5 @@
-//go:generate echo $PWD - $GOPACKAGE - $GOFILE
 //go:generate mockgen -package $GOPACKAGE -destination mock_contract_test.go github.com/kamilsk/forward/internal/kubernetes/cli CLI
+//go:generate echo generated at $PWD/$GOFILE ($GOPACKAGE)
 package cli_test
 
 import (
@@ -10,10 +10,11 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/kamilsk/forward/internal/kubernetes"
-	. "github.com/kamilsk/forward/internal/kubernetes/cli"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/kamilsk/forward/internal/kubernetes"
+	. "github.com/kamilsk/forward/internal/kubernetes/cli"
 )
 
 const (

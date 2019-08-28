@@ -17,7 +17,6 @@ const (
 
 // NewCompletionCommand returns a command that helps to build autocompletion.
 //
-//  ```sh
 //  $ source <(cli completion)
 //  #
 //  # or add into .bash_profile / .zshrc
@@ -28,7 +27,6 @@ const (
 //  # or use bash-completion / zsh-completions
 //  $ cli completion bash > /path/to/bash_completion.d/cli.sh
 //  $ cli completion zsh  > /path/to/zsh-completions/_cli.zsh
-//  ```
 //
 func NewCompletionCommand() *cobra.Command {
 	cmd := &cobra.Command{

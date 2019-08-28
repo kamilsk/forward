@@ -6,8 +6,9 @@ import (
 	"io"
 	"strings"
 
-	"github.com/kamilsk/forward/internal/kubernetes"
 	"github.com/pkg/errors"
+
+	"github.com/kamilsk/forward/internal/kubernetes"
 )
 
 const kubectl = "kubectl"
