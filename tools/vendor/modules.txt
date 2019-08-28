@@ -169,7 +169,7 @@ github.com/pkg/errors
 github.com/sirupsen/logrus
 # github.com/sourcegraph/go-diff v0.5.1
 github.com/sourcegraph/go-diff/diff
-# github.com/spf13/afero v1.1.1
+# github.com/spf13/afero v1.1.0
 github.com/spf13/afero
 github.com/spf13/afero/mem
 # github.com/spf13/cast v1.2.0
@@ -178,7 +178,7 @@ github.com/spf13/cast
 github.com/spf13/cobra
 # github.com/spf13/jwalterweatherman v0.0.0-20180109140146-7c0cea34c8ec
 github.com/spf13/jwalterweatherman
-# github.com/spf13/pflag v1.0.2
+# github.com/spf13/pflag v1.0.1
 github.com/spf13/pflag
 # github.com/spf13/viper v1.0.2
 github.com/spf13/viper
