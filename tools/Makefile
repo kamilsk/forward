@@ -5,7 +5,7 @@ SHELL       = /bin/bash -euo pipefail
 
 export PATH := $(BINPATH):$(PATH)
 
-.DEFAULT_GOAL = deps
+.DEFAULT_GOAL = install
 
 .PHONY: env
 env:
@@ -18,16 +18,25 @@ env:
 
 .PHONY: brew
 brew:
-	@echo nothing to do
+	@echo brew: nothing to do
 
-.PHONY: deps
-deps:
-	@go get -m -u github.com/kamilsk/egg
-	@go build -o $(BINPATH)/egg github.com/kamilsk/egg
-	@go mod tidy && go mod vendor && go mod verify
+.PHONY: build
+build:
 	@GOFLAGS='-mod=vendor' egg --build
 	@mv bin/* $(BINPATH) && rm -rf bin
 
+.PHONY: deps
+deps:
+	@go mod tidy && go mod vendor && go mod verify
+
+.PHONY: egg
+egg:
+	@go get -m -u github.com/kamilsk/egg
+	@go build -o $(BINPATH)/egg github.com/kamilsk/egg
+
+.PHONY: install
+install: brew egg deps build
+
 .PHONY: update
 update:
-	@go get -u -tags=tools
+	@go get -tags=tools -u
