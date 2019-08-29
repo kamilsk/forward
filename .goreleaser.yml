@@ -10,8 +10,8 @@ archives:
     darwin: macOS
     linux:  Linux
 
-brew:
-  name: forward
+brews:
+- name: forward
   caveats: Use `forward pod [local:]remote`
   description: Extended kubectl port-forward - reliable multiple port forwarding.
   homepage: https://github.com/kamilsk/forward
@@ -23,8 +23,8 @@ brew:
     name:  homebrew-tap
     owner: kamilsk
 
-build:
-  binary: forward
+builds:
+- binary: forward
   env:
   - CGO_ENABLED=0
   goarch:
