@@ -47,7 +47,7 @@ update:
 	@go get -mod= -u
 
 .PHONY: refresh
-refresh: update deps generate format
+refresh: update deps generate format test-with-coverage
 
 
 .PHONY: test

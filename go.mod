@@ -7,5 +7,5 @@ require (
 	github.com/spf13/cobra v0.0.5
 	github.com/stretchr/testify v1.4.0
 	go.octolab.org/toolkit/cli v0.0.3
-	gopkg.in/AlecAivazis/survey.v1 v1.8.5
+	gopkg.in/AlecAivazis/survey.v1 v1.8.7
 )
