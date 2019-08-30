@@ -12,6 +12,8 @@ github.com/Azure/azure-pipeline-go/pipeline
 github.com/Azure/azure-storage-blob-go/azblob
 # github.com/BurntSushi/toml v0.3.1
 github.com/BurntSushi/toml
+# github.com/Masterminds/semver v1.4.2
+github.com/Masterminds/semver
 # github.com/OpenPeeDeeP/depguard v0.0.0-20180806142446-a69c782687b2
 github.com/OpenPeeDeeP/depguard
 # github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc
@@ -61,6 +63,8 @@ github.com/aws/aws-sdk-go/private/protocol/query/queryutil
 github.com/aws/aws-sdk-go/internal/sdkuri
 # github.com/blakesmith/ar v0.0.0-20150311145944-8bd4349a67f2
 github.com/blakesmith/ar
+# github.com/caarlos0/ctrlc v1.0.0
+github.com/caarlos0/ctrlc
 # github.com/campoy/unique v0.0.0-20180121183637-88950e537e7e
 github.com/campoy/unique
 # github.com/client9/codegen v0.0.0-20180316044450-92480ce66a06
@@ -209,9 +213,13 @@ github.com/googleapis/gax-go/v2
 # github.com/goreleaser/godownloader v0.0.0-20190803193356-7ef626c90bb6
 github.com/goreleaser/godownloader
 # github.com/goreleaser/goreleaser v0.110.0
+github.com/goreleaser/goreleaser
 github.com/goreleaser/goreleaser/pkg/config
 github.com/goreleaser/goreleaser/pkg/context
 github.com/goreleaser/goreleaser/pkg/defaults
+github.com/goreleaser/goreleaser/internal/middleware
+github.com/goreleaser/goreleaser/internal/pipeline
+github.com/goreleaser/goreleaser/internal/static
 github.com/goreleaser/goreleaser/internal/artifact
 github.com/goreleaser/goreleaser/internal/pipe/archive
 github.com/goreleaser/goreleaser/internal/pipe/artifactory
@@ -229,18 +237,27 @@ github.com/goreleaser/goreleaser/internal/pipe/scoop
 github.com/goreleaser/goreleaser/internal/pipe/sign
 github.com/goreleaser/goreleaser/internal/pipe/snapcraft
 github.com/goreleaser/goreleaser/internal/pipe/snapshot
+github.com/goreleaser/goreleaser/internal/pipe
+github.com/goreleaser/goreleaser/internal/pipe/before
+github.com/goreleaser/goreleaser/internal/pipe/changelog
+github.com/goreleaser/goreleaser/internal/pipe/defaults
+github.com/goreleaser/goreleaser/internal/pipe/dist
+github.com/goreleaser/goreleaser/internal/pipe/effectiveconfig
+github.com/goreleaser/goreleaser/internal/pipe/git
+github.com/goreleaser/goreleaser/internal/pipe/publish
+github.com/goreleaser/goreleaser/internal/pipe/semver
 github.com/goreleaser/goreleaser/internal/deprecate
 github.com/goreleaser/goreleaser/internal/ids
 github.com/goreleaser/goreleaser/internal/semerrgroup
 github.com/goreleaser/goreleaser/internal/tmpl
 github.com/goreleaser/goreleaser/pkg/archive
 github.com/goreleaser/goreleaser/internal/http
-github.com/goreleaser/goreleaser/internal/pipe
 github.com/goreleaser/goreleaser/internal/client
 github.com/goreleaser/goreleaser/internal/builders/golang
 github.com/goreleaser/goreleaser/pkg/build
 github.com/goreleaser/goreleaser/internal/linux
 github.com/goreleaser/goreleaser/internal/git
+github.com/goreleaser/goreleaser/internal/pipe/put
 github.com/goreleaser/goreleaser/pkg/archive/gzip
 github.com/goreleaser/goreleaser/pkg/archive/targz
 github.com/goreleaser/goreleaser/pkg/archive/zip
@@ -384,7 +401,7 @@ golang.org/x/text/unicode/norm
 golang.org/x/text/width
 golang.org/x/text/secure/bidirule
 golang.org/x/text/unicode/bidi
-# golang.org/x/tools v0.0.0-20190829051458-42f498d34c4d => github.com/kamilsk/go-tools v0.0.0-20190618115843-d350ce7f7a97
+# golang.org/x/tools v0.0.0-20190830172400-56125e7d709e => github.com/kamilsk/go-tools v0.0.0-20190618115843-d350ce7f7a97
 golang.org/x/tools/cmd/goimports
 golang.org/x/tools/go/packages
 golang.org/x/tools/internal/imports
