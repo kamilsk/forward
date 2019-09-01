@@ -2,7 +2,7 @@
 >
 > `forward` - extended `kubectl port-forward` - reliable multiple port forwarding.
 
-[![Build Status][icon_build]][page_build]
+[![Build][icon_build]][page_build]
 
 ## 💡 Idea
 
@@ -10,8 +10,7 @@
 $ forward postgresql 5432 redis 6379:6379
 ```
 
-Full description of the idea is available
-[here](https://www.notion.so/octolab/forward-94a09f0b2f6143d1b71d08edf3e52771?r=0b753cbf767346f5a6fd51194829a2f3).
+Full description of the idea is available [here][design].
 
 ## 🏆 Motivation
 
@@ -70,7 +69,7 @@ $ egg github.com/kamilsk/forward -- go install .
 $ egg bitbucket.org/kamilsk/forward -- go install .
 ```
 
-> [egg][page_egg]<sup id="anchor-egg">[1](#egg)</sup> is an `extended go get`.
+> [egg][]<sup id="anchor-egg">[1](#egg)</sup> is an `extended go get`.
 
 ### Bash and Zsh completions
 
@@ -85,8 +84,10 @@ $ forward completion zsh  > /path/to/zsh-completions/_forward.zsh
 
 made with ❤️ for everyone
 
-[icon_build]:      https://travis-ci.org/kamilsk/forward.svg?branch=master
+[icon_build]:       https://travis-ci.org/kamilsk/forward.svg?branch=master
 
-[page_build]:      https://travis-ci.org/kamilsk/forward
-[page_promo]:      https://github.com/kamilsk/forward
-[page_egg]:        https://github.com/kamilsk/egg
+[page_build]:       https://travis-ci.org/kamilsk/forward
+[page_promo]:       https://github.com/kamilsk/forward
+
+[egg]:              https://github.com/kamilsk/egg
+[design]:           https://www.notion.so/octolab/forward-94a09f0b2f6143d1b71d08edf3e52771?r=0b753cbf767346f5a6fd51194829a2f3
