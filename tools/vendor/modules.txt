@@ -1,11 +1,11 @@
 # cloud.google.com/go v0.37.0
-cloud.google.com/go/storage
+cloud.google.com/go/compute/metadata
 cloud.google.com/go/iam
 cloud.google.com/go/internal
 cloud.google.com/go/internal/optional
 cloud.google.com/go/internal/trace
 cloud.google.com/go/internal/version
-cloud.google.com/go/compute/metadata
+cloud.google.com/go/storage
 # github.com/Azure/azure-pipeline-go v0.1.8
 github.com/Azure/azure-pipeline-go/pipeline
 # github.com/Azure/azure-storage-blob-go v0.0.0-20190104215108-45d0c5e3638e
@@ -26,41 +26,41 @@ github.com/apex/log
 github.com/apex/log/handlers/cli
 # github.com/aws/aws-sdk-go v1.16.23
 github.com/aws/aws-sdk-go/aws
-github.com/aws/aws-sdk-go/aws/credentials
-github.com/aws/aws-sdk-go/aws/credentials/stscreds
-github.com/aws/aws-sdk-go/aws/session
-github.com/aws/aws-sdk-go/service/s3
 github.com/aws/aws-sdk-go/aws/awserr
+github.com/aws/aws-sdk-go/aws/awsutil
 github.com/aws/aws-sdk-go/aws/client
-github.com/aws/aws-sdk-go/service/s3/s3manager
-github.com/aws/aws-sdk-go/aws/endpoints
-github.com/aws/aws-sdk-go/internal/sdkio
-github.com/aws/aws-sdk-go/internal/ini
-github.com/aws/aws-sdk-go/internal/shareddefaults
-github.com/aws/aws-sdk-go/service/sts
+github.com/aws/aws-sdk-go/aws/client/metadata
 github.com/aws/aws-sdk-go/aws/corehandlers
+github.com/aws/aws-sdk-go/aws/credentials
+github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds
+github.com/aws/aws-sdk-go/aws/credentials/endpointcreds
 github.com/aws/aws-sdk-go/aws/credentials/processcreds
+github.com/aws/aws-sdk-go/aws/credentials/stscreds
 github.com/aws/aws-sdk-go/aws/csm
 github.com/aws/aws-sdk-go/aws/defaults
+github.com/aws/aws-sdk-go/aws/ec2metadata
+github.com/aws/aws-sdk-go/aws/endpoints
 github.com/aws/aws-sdk-go/aws/request
-github.com/aws/aws-sdk-go/aws/awsutil
-github.com/aws/aws-sdk-go/aws/client/metadata
+github.com/aws/aws-sdk-go/aws/session
 github.com/aws/aws-sdk-go/aws/signer/v4
+github.com/aws/aws-sdk-go/internal/ini
 github.com/aws/aws-sdk-go/internal/s3err
+github.com/aws/aws-sdk-go/internal/sdkio
+github.com/aws/aws-sdk-go/internal/sdkrand
+github.com/aws/aws-sdk-go/internal/sdkuri
+github.com/aws/aws-sdk-go/internal/shareddefaults
 github.com/aws/aws-sdk-go/private/protocol
 github.com/aws/aws-sdk-go/private/protocol/eventstream
 github.com/aws/aws-sdk-go/private/protocol/eventstream/eventstreamapi
+github.com/aws/aws-sdk-go/private/protocol/query
+github.com/aws/aws-sdk-go/private/protocol/query/queryutil
 github.com/aws/aws-sdk-go/private/protocol/rest
 github.com/aws/aws-sdk-go/private/protocol/restxml
-github.com/aws/aws-sdk-go/internal/sdkrand
-github.com/aws/aws-sdk-go/service/s3/s3iface
-github.com/aws/aws-sdk-go/private/protocol/query
-github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds
-github.com/aws/aws-sdk-go/aws/credentials/endpointcreds
-github.com/aws/aws-sdk-go/aws/ec2metadata
 github.com/aws/aws-sdk-go/private/protocol/xml/xmlutil
-github.com/aws/aws-sdk-go/private/protocol/query/queryutil
-github.com/aws/aws-sdk-go/internal/sdkuri
+github.com/aws/aws-sdk-go/service/s3
+github.com/aws/aws-sdk-go/service/s3/s3iface
+github.com/aws/aws-sdk-go/service/s3/s3manager
+github.com/aws/aws-sdk-go/service/sts
 # github.com/blakesmith/ar v0.0.0-20150311145944-8bd4349a67f2
 github.com/blakesmith/ar
 # github.com/caarlos0/ctrlc v1.0.0
@@ -68,8 +68,8 @@ github.com/caarlos0/ctrlc
 # github.com/campoy/unique v0.0.0-20180121183637-88950e537e7e
 github.com/campoy/unique
 # github.com/client9/codegen v0.0.0-20180316044450-92480ce66a06
-github.com/client9/codegen/shell
 github.com/client9/codegen
+github.com/client9/codegen/shell
 # github.com/fatih/color v1.7.0
 github.com/fatih/color
 # github.com/fsnotify/fsnotify v1.4.7
@@ -97,25 +97,25 @@ github.com/go-toolsmith/typep
 # github.com/gobwas/glob v0.2.3
 github.com/gobwas/glob
 github.com/gobwas/glob/compiler
-github.com/gobwas/glob/syntax
 github.com/gobwas/glob/match
+github.com/gobwas/glob/syntax
 github.com/gobwas/glob/syntax/ast
-github.com/gobwas/glob/util/runes
 github.com/gobwas/glob/syntax/lexer
+github.com/gobwas/glob/util/runes
 github.com/gobwas/glob/util/strings
 # github.com/gogo/protobuf v1.2.0
 github.com/gogo/protobuf/proto
 # github.com/golang/mock v1.3.1
+github.com/golang/mock/gomock
 github.com/golang/mock/mockgen
 github.com/golang/mock/mockgen/model
-github.com/golang/mock/gomock
 # github.com/golang/protobuf v1.2.0
 github.com/golang/protobuf/proto
+github.com/golang/protobuf/protoc-gen-go/descriptor
 github.com/golang/protobuf/ptypes
 github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/ptypes/duration
 github.com/golang/protobuf/ptypes/timestamp
-github.com/golang/protobuf/protoc-gen-go/descriptor
 # github.com/golangci/check v0.0.0-20180506172741-cfe4005ccda2
 github.com/golangci/check/cmd/structcheck
 github.com/golangci/check/cmd/varcheck
@@ -123,8 +123,8 @@ github.com/golangci/check/cmd/varcheck
 github.com/golangci/dupl
 github.com/golangci/dupl/job
 github.com/golangci/dupl/printer
-github.com/golangci/dupl/syntax
 github.com/golangci/dupl/suffixtree
+github.com/golangci/dupl/syntax
 github.com/golangci/dupl/syntax/golang
 # github.com/golangci/errcheck v0.0.0-20181003203344-ef45e06d44b6
 github.com/golangci/errcheck/golangci
@@ -132,26 +132,26 @@ github.com/golangci/errcheck/internal/errcheck
 # github.com/golangci/go-misc v0.0.0-20180628070357-927a3d87b613
 github.com/golangci/go-misc/deadcode
 # github.com/golangci/go-tools v0.0.0-20180109140146-af6baa5dc196
-github.com/golangci/go-tools/config
-github.com/golangci/go-tools/lint
-github.com/golangci/go-tools/lint/lintutil
-github.com/golangci/go-tools/simple
-github.com/golangci/go-tools/staticcheck
-github.com/golangci/go-tools/stylecheck
-github.com/golangci/go-tools/unused
-github.com/golangci/go-tools/ssa
-github.com/golangci/go-tools/ssa/ssautil
-github.com/golangci/go-tools/lint/lintutil/format
-github.com/golangci/go-tools/version
 github.com/golangci/go-tools/arg
-github.com/golangci/go-tools/internal/sharedcheck
-github.com/golangci/go-tools/lint/lintdsl
-github.com/golangci/go-tools/deprecated
-github.com/golangci/go-tools/functions
-github.com/golangci/go-tools/ssautil
-github.com/golangci/go-tools/staticcheck/vrp
 github.com/golangci/go-tools/callgraph
 github.com/golangci/go-tools/callgraph/static
+github.com/golangci/go-tools/config
+github.com/golangci/go-tools/deprecated
+github.com/golangci/go-tools/functions
+github.com/golangci/go-tools/internal/sharedcheck
+github.com/golangci/go-tools/lint
+github.com/golangci/go-tools/lint/lintdsl
+github.com/golangci/go-tools/lint/lintutil
+github.com/golangci/go-tools/lint/lintutil/format
+github.com/golangci/go-tools/simple
+github.com/golangci/go-tools/ssa
+github.com/golangci/go-tools/ssa/ssautil
+github.com/golangci/go-tools/ssautil
+github.com/golangci/go-tools/staticcheck
+github.com/golangci/go-tools/staticcheck/vrp
+github.com/golangci/go-tools/stylecheck
+github.com/golangci/go-tools/unused
+github.com/golangci/go-tools/version
 # github.com/golangci/goconst v0.0.0-20180610141641-041c5f2b40f3
 github.com/golangci/goconst
 # github.com/golangci/gocyclo v0.0.0-20180528134321-2becd97e67ee
@@ -165,22 +165,22 @@ github.com/golangci/golangci-lint/pkg/commands
 github.com/golangci/golangci-lint/pkg/config
 github.com/golangci/golangci-lint/pkg/exitcodes
 github.com/golangci/golangci-lint/pkg/fsutils
+github.com/golangci/golangci-lint/pkg/golinters
+github.com/golangci/golangci-lint/pkg/golinters/goanalysis
+github.com/golangci/golangci-lint/pkg/golinters/goanalysis/checker
+github.com/golangci/golangci-lint/pkg/golinters/goanalysis/passes/nilness
 github.com/golangci/golangci-lint/pkg/goutil
 github.com/golangci/golangci-lint/pkg/lint
+github.com/golangci/golangci-lint/pkg/lint/astcache
 github.com/golangci/golangci-lint/pkg/lint/linter
 github.com/golangci/golangci-lint/pkg/lint/lintersdb
 github.com/golangci/golangci-lint/pkg/logutils
+github.com/golangci/golangci-lint/pkg/packages
 github.com/golangci/golangci-lint/pkg/printers
 github.com/golangci/golangci-lint/pkg/report
 github.com/golangci/golangci-lint/pkg/result
 github.com/golangci/golangci-lint/pkg/result/processors
-github.com/golangci/golangci-lint/pkg/lint/astcache
-github.com/golangci/golangci-lint/pkg/packages
 github.com/golangci/golangci-lint/pkg/timeutils
-github.com/golangci/golangci-lint/pkg/golinters
-github.com/golangci/golangci-lint/pkg/golinters/goanalysis
-github.com/golangci/golangci-lint/pkg/golinters/goanalysis/passes/nilness
-github.com/golangci/golangci-lint/pkg/golinters/goanalysis/checker
 # github.com/golangci/gosec v0.0.0-20180901114220-66fb7fc33547
 github.com/golangci/gosec
 github.com/golangci/gosec/rules
@@ -214,71 +214,71 @@ github.com/googleapis/gax-go/v2
 github.com/goreleaser/godownloader
 # github.com/goreleaser/goreleaser v0.110.0
 github.com/goreleaser/goreleaser
-github.com/goreleaser/goreleaser/pkg/config
-github.com/goreleaser/goreleaser/pkg/context
-github.com/goreleaser/goreleaser/pkg/defaults
-github.com/goreleaser/goreleaser/internal/middleware
-github.com/goreleaser/goreleaser/internal/pipeline
-github.com/goreleaser/goreleaser/internal/static
 github.com/goreleaser/goreleaser/internal/artifact
+github.com/goreleaser/goreleaser/internal/builders/golang
+github.com/goreleaser/goreleaser/internal/client
+github.com/goreleaser/goreleaser/internal/deprecate
+github.com/goreleaser/goreleaser/internal/git
+github.com/goreleaser/goreleaser/internal/http
+github.com/goreleaser/goreleaser/internal/ids
+github.com/goreleaser/goreleaser/internal/linux
+github.com/goreleaser/goreleaser/internal/middleware
+github.com/goreleaser/goreleaser/internal/pipe
 github.com/goreleaser/goreleaser/internal/pipe/archive
 github.com/goreleaser/goreleaser/internal/pipe/artifactory
+github.com/goreleaser/goreleaser/internal/pipe/before
 github.com/goreleaser/goreleaser/internal/pipe/blob
 github.com/goreleaser/goreleaser/internal/pipe/brew
 github.com/goreleaser/goreleaser/internal/pipe/build
+github.com/goreleaser/goreleaser/internal/pipe/changelog
 github.com/goreleaser/goreleaser/internal/pipe/checksums
+github.com/goreleaser/goreleaser/internal/pipe/defaults
+github.com/goreleaser/goreleaser/internal/pipe/dist
 github.com/goreleaser/goreleaser/internal/pipe/docker
+github.com/goreleaser/goreleaser/internal/pipe/effectiveconfig
 github.com/goreleaser/goreleaser/internal/pipe/env
+github.com/goreleaser/goreleaser/internal/pipe/git
 github.com/goreleaser/goreleaser/internal/pipe/nfpm
 github.com/goreleaser/goreleaser/internal/pipe/project
+github.com/goreleaser/goreleaser/internal/pipe/publish
+github.com/goreleaser/goreleaser/internal/pipe/put
 github.com/goreleaser/goreleaser/internal/pipe/release
 github.com/goreleaser/goreleaser/internal/pipe/s3
 github.com/goreleaser/goreleaser/internal/pipe/scoop
+github.com/goreleaser/goreleaser/internal/pipe/semver
 github.com/goreleaser/goreleaser/internal/pipe/sign
 github.com/goreleaser/goreleaser/internal/pipe/snapcraft
 github.com/goreleaser/goreleaser/internal/pipe/snapshot
-github.com/goreleaser/goreleaser/internal/pipe
-github.com/goreleaser/goreleaser/internal/pipe/before
-github.com/goreleaser/goreleaser/internal/pipe/changelog
-github.com/goreleaser/goreleaser/internal/pipe/defaults
-github.com/goreleaser/goreleaser/internal/pipe/dist
-github.com/goreleaser/goreleaser/internal/pipe/effectiveconfig
-github.com/goreleaser/goreleaser/internal/pipe/git
-github.com/goreleaser/goreleaser/internal/pipe/publish
-github.com/goreleaser/goreleaser/internal/pipe/semver
-github.com/goreleaser/goreleaser/internal/deprecate
-github.com/goreleaser/goreleaser/internal/ids
+github.com/goreleaser/goreleaser/internal/pipeline
 github.com/goreleaser/goreleaser/internal/semerrgroup
+github.com/goreleaser/goreleaser/internal/static
 github.com/goreleaser/goreleaser/internal/tmpl
 github.com/goreleaser/goreleaser/pkg/archive
-github.com/goreleaser/goreleaser/internal/http
-github.com/goreleaser/goreleaser/internal/client
-github.com/goreleaser/goreleaser/internal/builders/golang
-github.com/goreleaser/goreleaser/pkg/build
-github.com/goreleaser/goreleaser/internal/linux
-github.com/goreleaser/goreleaser/internal/git
-github.com/goreleaser/goreleaser/internal/pipe/put
 github.com/goreleaser/goreleaser/pkg/archive/gzip
 github.com/goreleaser/goreleaser/pkg/archive/targz
 github.com/goreleaser/goreleaser/pkg/archive/zip
+github.com/goreleaser/goreleaser/pkg/build
+github.com/goreleaser/goreleaser/pkg/config
+github.com/goreleaser/goreleaser/pkg/context
+github.com/goreleaser/goreleaser/pkg/defaults
 # github.com/goreleaser/nfpm v0.11.0
 github.com/goreleaser/nfpm
 github.com/goreleaser/nfpm/deb
-github.com/goreleaser/nfpm/rpm
 github.com/goreleaser/nfpm/glob
+github.com/goreleaser/nfpm/rpm
 # github.com/gostaticanalysis/analysisutil v0.0.0-20190318220348-4088753ea4d3
 github.com/gostaticanalysis/analysisutil
 # github.com/hashicorp/golang-lru v0.5.0
 github.com/hashicorp/golang-lru/simplelru
 # github.com/hashicorp/hcl v1.0.0
 github.com/hashicorp/hcl
-github.com/hashicorp/hcl/hcl/printer
 github.com/hashicorp/hcl/hcl/ast
 github.com/hashicorp/hcl/hcl/parser
-github.com/hashicorp/hcl/hcl/token
-github.com/hashicorp/hcl/json/parser
+github.com/hashicorp/hcl/hcl/printer
 github.com/hashicorp/hcl/hcl/scanner
 github.com/hashicorp/hcl/hcl/strconv
+github.com/hashicorp/hcl/hcl/token
+github.com/hashicorp/hcl/json/parser
 github.com/hashicorp/hcl/json/scanner
 github.com/hashicorp/hcl/json/token
 # github.com/imdario/mergo v0.3.6
@@ -311,14 +311,14 @@ github.com/mitchellh/go-homedir
 github.com/mitchellh/mapstructure
 # github.com/nbutton23/zxcvbn-go v0.0.0-20171102151520-eafdab6b0663
 github.com/nbutton23/zxcvbn-go
+github.com/nbutton23/zxcvbn-go/adjacency
+github.com/nbutton23/zxcvbn-go/data
+github.com/nbutton23/zxcvbn-go/entropy
+github.com/nbutton23/zxcvbn-go/frequency
 github.com/nbutton23/zxcvbn-go/match
 github.com/nbutton23/zxcvbn-go/matching
 github.com/nbutton23/zxcvbn-go/scoring
 github.com/nbutton23/zxcvbn-go/utils/math
-github.com/nbutton23/zxcvbn-go/adjacency
-github.com/nbutton23/zxcvbn-go/entropy
-github.com/nbutton23/zxcvbn-go/frequency
-github.com/nbutton23/zxcvbn-go/data
 # github.com/pelletier/go-toml v1.2.0 => github.com/kamilsk/go-toml v1.4.0-asd-patch
 github.com/pelletier/go-toml
 # github.com/pkg/errors v0.8.1
@@ -327,7 +327,7 @@ github.com/pkg/errors
 github.com/sirupsen/logrus
 # github.com/sourcegraph/go-diff v0.5.1
 github.com/sourcegraph/go-diff/diff
-# github.com/spf13/afero v1.1.2
+# github.com/spf13/afero v1.2.2
 github.com/spf13/afero
 github.com/spf13/afero/mem
 # github.com/spf13/cast v1.2.0
@@ -336,54 +336,54 @@ github.com/spf13/cast
 github.com/spf13/cobra
 # github.com/spf13/jwalterweatherman v1.0.0
 github.com/spf13/jwalterweatherman
-# github.com/spf13/pflag v1.0.3
+# github.com/spf13/pflag v1.0.5
 github.com/spf13/pflag
 # github.com/spf13/viper v1.2.1
 github.com/spf13/viper
 # github.com/timakin/bodyclose v0.0.0-20190407043127-4a873e97b2bb
 github.com/timakin/bodyclose/passes/bodyclose
 # go.opencensus.io v0.19.2
-go.opencensus.io/stats
-go.opencensus.io/stats/view
-go.opencensus.io/tag
+go.opencensus.io
 go.opencensus.io/exemplar
-go.opencensus.io/stats/internal
+go.opencensus.io/internal
 go.opencensus.io/internal/tagencoding
 go.opencensus.io/plugin/ocgrpc
-go.opencensus.io/trace
-go.opencensus.io/trace/propagation
-go.opencensus.io/internal
-go.opencensus.io/trace/internal
-go.opencensus.io/trace/tracestate
 go.opencensus.io/plugin/ochttp
-go.opencensus.io
 go.opencensus.io/plugin/ochttp/propagation/b3
+go.opencensus.io/stats
+go.opencensus.io/stats/internal
+go.opencensus.io/stats/view
+go.opencensus.io/tag
+go.opencensus.io/trace
+go.opencensus.io/trace/internal
+go.opencensus.io/trace/propagation
+go.opencensus.io/trace/tracestate
 # gocloud.dev v0.13.0
+gocloud.dev/aws
 gocloud.dev/blob
 gocloud.dev/blob/azureblob
+gocloud.dev/blob/driver
 gocloud.dev/blob/gcsblob
 gocloud.dev/blob/s3blob
-gocloud.dev/blob/driver
 gocloud.dev/gcerrors
+gocloud.dev/gcp
+gocloud.dev/internal/escape
 gocloud.dev/internal/gcerr
 gocloud.dev/internal/oc
 gocloud.dev/internal/openurl
-gocloud.dev/internal/escape
-gocloud.dev/internal/useragent
-gocloud.dev/gcp
-gocloud.dev/aws
 gocloud.dev/internal/retry
+gocloud.dev/internal/useragent
 # golang.org/x/crypto v0.0.0-20190325154230-a5d413f7728c
 golang.org/x/crypto/ssh/terminal
 # golang.org/x/net v0.0.0-20190328230028-74de082e2cca
 golang.org/x/net/context
-golang.org/x/net/trace
 golang.org/x/net/context/ctxhttp
-golang.org/x/net/internal/timeseries
+golang.org/x/net/http/httpguts
 golang.org/x/net/http2
 golang.org/x/net/http2/hpack
-golang.org/x/net/http/httpguts
 golang.org/x/net/idna
+golang.org/x/net/internal/timeseries
+golang.org/x/net/trace
 # golang.org/x/oauth2 v0.0.0-20190226205417-e64efc72b421
 golang.org/x/oauth2
 golang.org/x/oauth2/google
@@ -395,41 +395,29 @@ golang.org/x/sync/errgroup
 # golang.org/x/sys v0.0.0-20190402142545-baf5eb976a8c
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-# golang.org/x/text v0.3.1-0.20180807135948-17ff2d5776d2
+# golang.org/x/text v0.3.2
+golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
+golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
 golang.org/x/text/width
-golang.org/x/text/secure/bidirule
-golang.org/x/text/unicode/bidi
 # golang.org/x/tools v0.0.0-20190830172400-56125e7d709e => github.com/kamilsk/go-tools v0.0.0-20190618115843-d350ce7f7a97
 golang.org/x/tools/cmd/goimports
-golang.org/x/tools/go/packages
-golang.org/x/tools/internal/imports
-golang.org/x/tools/go/gcexportdata
-golang.org/x/tools/go/internal/packagesdriver
-golang.org/x/tools/internal/gopathwalk
-golang.org/x/tools/internal/semver
-golang.org/x/tools/go/ast/astutil
-golang.org/x/tools/internal/module
-golang.org/x/tools/go/internal/gcimporter
-golang.org/x/tools/internal/fastwalk
-golang.org/x/tools/go/loader
-golang.org/x/tools/go/ssa
-golang.org/x/tools/go/ssa/ssautil
-golang.org/x/tools/go/buildutil
-golang.org/x/tools/go/internal/cgo
-golang.org/x/tools/go/types/typeutil
 golang.org/x/tools/go/analysis
 golang.org/x/tools/go/analysis/passes/asmdecl
 golang.org/x/tools/go/analysis/passes/assign
 golang.org/x/tools/go/analysis/passes/atomic
 golang.org/x/tools/go/analysis/passes/atomicalign
 golang.org/x/tools/go/analysis/passes/bools
+golang.org/x/tools/go/analysis/passes/buildssa
 golang.org/x/tools/go/analysis/passes/buildtag
 golang.org/x/tools/go/analysis/passes/cgocall
 golang.org/x/tools/go/analysis/passes/composite
 golang.org/x/tools/go/analysis/passes/copylock
+golang.org/x/tools/go/analysis/passes/ctrlflow
 golang.org/x/tools/go/analysis/passes/httpresponse
+golang.org/x/tools/go/analysis/passes/inspect
+golang.org/x/tools/go/analysis/passes/internal/analysisutil
 golang.org/x/tools/go/analysis/passes/loopclosure
 golang.org/x/tools/go/analysis/passes/lostcancel
 golang.org/x/tools/go/analysis/passes/nilfunc
@@ -443,56 +431,68 @@ golang.org/x/tools/go/analysis/passes/unmarshal
 golang.org/x/tools/go/analysis/passes/unreachable
 golang.org/x/tools/go/analysis/passes/unsafeptr
 golang.org/x/tools/go/analysis/passes/unusedresult
-golang.org/x/tools/imports
-golang.org/x/tools/go/analysis/passes/buildssa
-golang.org/x/tools/go/analysis/passes/internal/analysisutil
-golang.org/x/tools/go/analysis/passes/inspect
+golang.org/x/tools/go/ast/astutil
 golang.org/x/tools/go/ast/inspector
-golang.org/x/tools/go/analysis/passes/ctrlflow
+golang.org/x/tools/go/buildutil
 golang.org/x/tools/go/cfg
+golang.org/x/tools/go/gcexportdata
+golang.org/x/tools/go/internal/cgo
+golang.org/x/tools/go/internal/gcimporter
+golang.org/x/tools/go/internal/packagesdriver
+golang.org/x/tools/go/loader
+golang.org/x/tools/go/packages
+golang.org/x/tools/go/ssa
+golang.org/x/tools/go/ssa/ssautil
+golang.org/x/tools/go/types/typeutil
+golang.org/x/tools/imports
+golang.org/x/tools/internal/fastwalk
+golang.org/x/tools/internal/gopathwalk
+golang.org/x/tools/internal/imports
+golang.org/x/tools/internal/module
+golang.org/x/tools/internal/semver
 # golang.org/x/xerrors v0.0.0-20190129162528-20feca13ea86
 golang.org/x/xerrors
 golang.org/x/xerrors/internal
 # google.golang.org/api v0.2.0
+google.golang.org/api/gensupport
 google.golang.org/api/googleapi
+google.golang.org/api/googleapi/internal/uritemplates
+google.golang.org/api/googleapi/transport
+google.golang.org/api/internal
 google.golang.org/api/iterator
 google.golang.org/api/option
 google.golang.org/api/storage/v1
 google.golang.org/api/transport/http
-google.golang.org/api/googleapi/internal/uritemplates
-google.golang.org/api/internal
-google.golang.org/api/gensupport
-google.golang.org/api/googleapi/transport
 google.golang.org/api/transport/http/internal/propagation
 # google.golang.org/appengine v1.4.0
-google.golang.org/appengine/urlfetch
 google.golang.org/appengine
 google.golang.org/appengine/internal
-google.golang.org/appengine/internal/urlfetch
 google.golang.org/appengine/internal/app_identity
-google.golang.org/appengine/internal/modules
 google.golang.org/appengine/internal/base
 google.golang.org/appengine/internal/datastore
 google.golang.org/appengine/internal/log
+google.golang.org/appengine/internal/modules
 google.golang.org/appengine/internal/remote_api
+google.golang.org/appengine/internal/urlfetch
+google.golang.org/appengine/urlfetch
 # google.golang.org/genproto v0.0.0-20190307195333-5fe7a883aa19
-google.golang.org/genproto/googleapis/iam/v1
-google.golang.org/genproto/googleapis/rpc/status
-google.golang.org/genproto/googleapis/rpc/code
 google.golang.org/genproto/googleapis/api/annotations
+google.golang.org/genproto/googleapis/iam/v1
+google.golang.org/genproto/googleapis/rpc/code
+google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/grpc v1.19.0
-google.golang.org/grpc/codes
-google.golang.org/grpc/status
 google.golang.org/grpc
-google.golang.org/grpc/grpclog
-google.golang.org/grpc/metadata
-google.golang.org/grpc/stats
 google.golang.org/grpc/balancer
+google.golang.org/grpc/balancer/base
 google.golang.org/grpc/balancer/roundrobin
+google.golang.org/grpc/binarylog/grpc_binarylog_v1
+google.golang.org/grpc/codes
 google.golang.org/grpc/connectivity
 google.golang.org/grpc/credentials
+google.golang.org/grpc/credentials/internal
 google.golang.org/grpc/encoding
 google.golang.org/grpc/encoding/proto
+google.golang.org/grpc/grpclog
 google.golang.org/grpc/internal
 google.golang.org/grpc/internal/backoff
 google.golang.org/grpc/internal/binarylog
@@ -500,18 +500,18 @@ google.golang.org/grpc/internal/channelz
 google.golang.org/grpc/internal/envconfig
 google.golang.org/grpc/internal/grpcrand
 google.golang.org/grpc/internal/grpcsync
+google.golang.org/grpc/internal/syscall
 google.golang.org/grpc/internal/transport
 google.golang.org/grpc/keepalive
+google.golang.org/grpc/metadata
 google.golang.org/grpc/naming
 google.golang.org/grpc/peer
 google.golang.org/grpc/resolver
 google.golang.org/grpc/resolver/dns
 google.golang.org/grpc/resolver/passthrough
+google.golang.org/grpc/stats
+google.golang.org/grpc/status
 google.golang.org/grpc/tap
-google.golang.org/grpc/balancer/base
-google.golang.org/grpc/credentials/internal
-google.golang.org/grpc/binarylog/grpc_binarylog_v1
-google.golang.org/grpc/internal/syscall
 # gopkg.in/alecthomas/kingpin.v2 v2.2.6
 gopkg.in/alecthomas/kingpin.v2
 # gopkg.in/yaml.v2 v2.2.2

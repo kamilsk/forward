@@ -28,10 +28,10 @@ func (sh Shell) String() string {
 	return ""
 }
 
-type Context int
+type Operation int
 
 const (
-	Assign Context = 1 << iota
+	Assign Operation = 1 << iota
 	Completion
 	Exec
 	Print
@@ -39,7 +39,7 @@ const (
 	All = Assign | Completion | Exec | Print
 )
 
-func Classify(bin string, _ Context) (sh Shell, err error) {
+func Classify(bin string, operations ...Operation) (sh Shell, err error) {
 	if bin == "" {
 		panic("shell: cannot classify shell by empty binary name")
 	}
@@ -57,6 +57,12 @@ func Classify(bin string, _ Context) (sh Shell, err error) {
 	default:
 		err = fmt.Errorf("shell: cannot classify shell by %q", bin)
 	}
+
+	var op Operation
+	for _, operation := range operations {
+		op |= operation
+	}
+	// matrix classification
 
 	return
 }
