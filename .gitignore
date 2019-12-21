@@ -3,4 +3,4 @@
 
 # binaries
 /bin/*
-!/bin/.gitkeep
+!/bin/activate

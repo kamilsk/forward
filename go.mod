@@ -13,6 +13,6 @@ require (
 	github.com/stretchr/testify v1.4.0
 	go.octolab.org v0.0.7 // indirect
 	go.octolab.org/toolkit/cli v0.0.6
-	golang.org/x/sys v0.0.0-20191220142924-d4481acd189f // indirect
+	golang.org/x/sys v0.0.0-20191220220014-0732a990476f // indirect
 	gopkg.in/AlecAivazis/survey.v1 v1.8.7
 )

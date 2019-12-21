@@ -33,7 +33,7 @@ github.com/stretchr/testify/assert
 go.octolab.org/os/shell
 # go.octolab.org/toolkit/cli v0.0.6
 go.octolab.org/toolkit/cli/cobra
-# golang.org/x/sys v0.0.0-20191220142924-d4481acd189f
+# golang.org/x/sys v0.0.0-20191220220014-0732a990476f
 golang.org/x/sys/unix
 # gopkg.in/AlecAivazis/survey.v1 v1.8.7
 gopkg.in/AlecAivazis/survey.v1
