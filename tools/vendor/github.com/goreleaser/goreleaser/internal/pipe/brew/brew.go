@@ -16,19 +16,20 @@ import (
 	"github.com/goreleaser/goreleaser/internal/client"
 	"github.com/goreleaser/goreleaser/internal/deprecate"
 	"github.com/goreleaser/goreleaser/internal/pipe"
-	"github.com/goreleaser/goreleaser/internal/semerrgroup"
 	"github.com/goreleaser/goreleaser/internal/tmpl"
 	"github.com/goreleaser/goreleaser/pkg/config"
 	"github.com/goreleaser/goreleaser/pkg/context"
 )
 
 // ErrNoArchivesFound happens when 0 archives are found
-var ErrNoArchivesFound = errors.New("brew tap: no archives found matching criteria")
+var ErrNoArchivesFound = errors.New("no linux/macos archives found")
 
 // ErrMultipleArchivesSameOS happens when the config yields multiple archives
 // for linux or windows.
-// TODO: improve this confusing error message
-var ErrMultipleArchivesSameOS = errors.New("brew tap: one tap can handle only 1 linux and 1 macos archive")
+var ErrMultipleArchivesSameOS = errors.New("one tap can handle only archive of an OS/Arch combination. Consider using ids in the brew section")
+
+// ErrTokenTypeNotImplementedForBrew indicates that a new token type was not implemented for this pipe
+var ErrTokenTypeNotImplementedForBrew = errors.New("token type not implemented for brew pipe")
 
 // Pipe for brew deployment
 type Pipe struct{}
@@ -39,18 +40,16 @@ func (Pipe) String() string {
 
 // Publish brew formula
 func (Pipe) Publish(ctx *context.Context) error {
-	client, err := client.NewGitHub(ctx)
+	client, err := client.New(ctx)
 	if err != nil {
 		return err
 	}
-	var g = semerrgroup.New(ctx.Parallelism)
 	for _, brew := range ctx.Config.Brews {
-		brew := brew
-		g.Go(func() error {
-			return doRun(ctx, brew, client)
-		})
+		if err := doRun(ctx, brew, client); err != nil {
+			return err
+		}
 	}
-	return g.Wait()
+	return nil
 }
 
 // Default sets the pipe defaults
@@ -88,6 +87,9 @@ func (Pipe) Default(ctx *context.Context) error {
 		if brew.Name == "" {
 			brew.Name = ctx.Config.ProjectName
 		}
+		if brew.Goarm == "" {
+			brew.Goarm = "6"
+		}
 	}
 
 	return nil
@@ -112,16 +114,25 @@ func contains(ss []string, s string) bool {
 }
 
 func doRun(ctx *context.Context, brew config.Homebrew, client client.Client) error {
-	if brew.GitHub.Name == "" {
+	if brew.GitHub.Name == "" && brew.GitLab.Name == "" {
 		return pipe.Skip("brew section is not configured")
 	}
+
+	// TODO: properly cover this with tests
 	var filters = []artifact.Filter{
 		artifact.Or(
 			artifact.ByGoos("darwin"),
 			artifact.ByGoos("linux"),
 		),
 		artifact.ByFormats("zip", "tar.gz"),
-		artifact.ByGoarch("amd64"),
+		artifact.Or(
+			artifact.ByGoarch("amd64"),
+			artifact.ByGoarch("arm64"),
+			artifact.And(
+				artifact.ByGoarch("arm"),
+				artifact.ByGoarm(brew.Goarm),
+			),
+		),
 		artifact.ByType(artifact.UploadableArchive),
 	}
 	if len(brew.IDs) > 0 {
@@ -133,7 +144,7 @@ func doRun(ctx *context.Context, brew config.Homebrew, client client.Client) err
 		return ErrNoArchivesFound
 	}
 
-	content, err := buildFormula(ctx, brew, archives)
+	content, err := buildFormula(ctx, brew, ctx.TokenType, archives)
 	if err != nil {
 		return err
 	}
@@ -141,7 +152,7 @@ func doRun(ctx *context.Context, brew config.Homebrew, client client.Client) err
 	var filename = brew.Name + ".rb"
 	var path = filepath.Join(ctx.Config.Dist, filename)
 	log.WithField("formula", path).Info("writing")
-	if err := ioutil.WriteFile(path, content.Bytes(), 0644); err != nil {
+	if err := ioutil.WriteFile(path, []byte(content), 0644); err != nil {
 		return err
 	}
 
@@ -154,41 +165,57 @@ func doRun(ctx *context.Context, brew config.Homebrew, client client.Client) err
 	if ctx.Config.Release.Draft {
 		return pipe.Skip("release is marked as draft")
 	}
+	if ctx.Config.Release.Disable {
+		return pipe.Skip("release is disabled")
+	}
 	if strings.TrimSpace(brew.SkipUpload) == "auto" && ctx.Semver.Prerelease != "" {
 		return pipe.Skip("prerelease detected with 'auto' upload, skipping homebrew publish")
 	}
 
-	var gpath = ghFormulaPath(brew.Folder, filename)
+	var repo config.Repo
+	switch ctx.TokenType {
+	case context.TokenTypeGitHub:
+		repo = brew.GitHub
+	case context.TokenTypeGitLab:
+		repo = brew.GitLab
+	default:
+		return ErrTokenTypeNotImplementedForBrew
+	}
+
+	var gpath = buildFormulaPath(brew.Folder, filename)
 	log.WithField("formula", gpath).
-		WithField("repo", brew.GitHub.String()).
+		WithField("repo", repo.String()).
 		Info("pushing")
 
 	var msg = fmt.Sprintf("Brew formula update for %s version %s", ctx.Config.ProjectName, ctx.Git.CurrentTag)
-	return client.CreateFile(ctx, brew.CommitAuthor, brew.GitHub, content, gpath, msg)
+	return client.CreateFile(ctx, brew.CommitAuthor, repo, []byte(content), gpath, msg)
 }
 
-func ghFormulaPath(folder, filename string) string {
+func buildFormulaPath(folder, filename string) string {
 	return path.Join(folder, filename)
 }
 
-func buildFormula(ctx *context.Context, brew config.Homebrew, artifacts []artifact.Artifact) (bytes.Buffer, error) {
-	data, err := dataFor(ctx, brew, artifacts)
+func buildFormula(ctx *context.Context, brew config.Homebrew, tokenType context.TokenType, artifacts []*artifact.Artifact) (string, error) {
+	data, err := dataFor(ctx, brew, tokenType, artifacts)
 	if err != nil {
-		return bytes.Buffer{}, err
+		return "", err
 	}
-	return doBuildFormula(data)
+	return doBuildFormula(ctx, data)
 }
 
-func doBuildFormula(data templateData) (out bytes.Buffer, err error) {
+func doBuildFormula(ctx *context.Context, data templateData) (string, error) {
 	t, err := template.New(data.Name).Parse(formulaTemplate)
 	if err != nil {
-		return out, err
+		return "", err
 	}
-	err = t.Execute(&out, data)
-	return
+	var out bytes.Buffer
+	if err := t.Execute(&out, data); err != nil {
+		return "", err
+	}
+	return tmpl.New(ctx).Apply(out.String())
 }
 
-func dataFor(ctx *context.Context, cfg config.Homebrew, artifacts []artifact.Artifact) (templateData, error) {
+func dataFor(ctx *context.Context, cfg config.Homebrew, tokenType context.TokenType, artifacts []*artifact.Artifact) (templateData, error) {
 	var result = templateData{
 		Name:             formulaNameFor(cfg.Name),
 		Desc:             cfg.Description,
@@ -212,12 +239,24 @@ func dataFor(ctx *context.Context, cfg config.Homebrew, artifacts []artifact.Art
 		}
 
 		if cfg.URLTemplate == "" {
-			cfg.URLTemplate = fmt.Sprintf(
-				"%s/%s/%s/releases/download/{{ .Tag }}/{{ .ArtifactName }}",
-				ctx.Config.GitHubURLs.Download,
-				ctx.Config.Release.GitHub.Owner,
-				ctx.Config.Release.GitHub.Name,
-			)
+			switch tokenType {
+			case context.TokenTypeGitHub:
+				cfg.URLTemplate = fmt.Sprintf(
+					"%s/%s/%s/releases/download/{{ .Tag }}/{{ .ArtifactName }}",
+					ctx.Config.GitHubURLs.Download,
+					ctx.Config.Release.GitHub.Owner,
+					ctx.Config.Release.GitHub.Name,
+				)
+			case context.TokenTypeGitLab:
+				cfg.URLTemplate = fmt.Sprintf(
+					"%s/%s/%s/uploads/{{ .ArtifactUploadHash }}/{{ .ArtifactName }}",
+					ctx.Config.GitLabURLs.Download,
+					ctx.Config.Release.GitLab.Owner,
+					ctx.Config.Release.GitLab.Name,
+				)
+			default:
+				return result, ErrTokenTypeNotImplementedForBrew
+			}
 		}
 		url, err := tmpl.New(ctx).WithArtifact(artifact, map[string]string{}).Apply(cfg.URLTemplate)
 		if err != nil {
@@ -233,10 +272,23 @@ func dataFor(ctx *context.Context, cfg config.Homebrew, artifacts []artifact.Art
 			}
 			result.MacOS = down
 		} else if artifact.Goos == "linux" {
-			if result.Linux.DownloadURL != "" {
-				return result, ErrMultipleArchivesSameOS
+			switch artifact.Goarch {
+			case "386", "amd64":
+				if result.Linux.DownloadURL != "" {
+					return result, ErrMultipleArchivesSameOS
+				}
+				result.Linux = down
+			case "arm":
+				if result.Arm.DownloadURL != "" {
+					return result, ErrMultipleArchivesSameOS
+				}
+				result.Arm = down
+			case "arm64":
+				if result.Arm64.DownloadURL != "" {
+					return result, ErrMultipleArchivesSameOS
+				}
+				result.Arm64 = down
 			}
-			result.Linux = down
 		}
 	}
 

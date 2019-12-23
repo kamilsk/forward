@@ -3,16 +3,13 @@ package blob
 
 import (
 	"fmt"
+	"strings"
 
+	"github.com/goreleaser/goreleaser/internal/deprecate"
 	"github.com/goreleaser/goreleaser/internal/pipe"
 	"github.com/goreleaser/goreleaser/internal/semerrgroup"
 	"github.com/goreleaser/goreleaser/internal/tmpl"
 	"github.com/goreleaser/goreleaser/pkg/context"
-
-	// Import the blob packages we want to be able to open.
-	_ "gocloud.dev/blob/azureblob"
-	_ "gocloud.dev/blob/gcsblob"
-	_ "gocloud.dev/blob/s3blob"
 )
 
 // Pipe for Artifactory
@@ -25,6 +22,10 @@ func (Pipe) String() string {
 
 // Default sets the pipe defaults
 func (Pipe) Default(ctx *context.Context) error {
+	if len(ctx.Config.Blob) > 0 {
+		deprecate.Notice("blob")
+		ctx.Config.Blobs = append(ctx.Config.Blobs, ctx.Config.Blob...)
+	}
 	for i := range ctx.Config.Blobs {
 		blob := &ctx.Config.Blobs[i]
 
@@ -33,13 +34,6 @@ func (Pipe) Default(ctx *context.Context) error {
 		}
 		if blob.Folder == "" {
 			blob.Folder = "{{ .ProjectName }}/{{ .Tag }}"
-		}
-		// Validation before opening connection to bucket
-		// gocdk also does this validation but doing it in advance for better error handling
-		// as currently, go cdk does not throw error if AZURE_STORAGE_KEY is missing.
-		err := checkProvider(blob.Provider)
-		if err != nil {
-			return err
 		}
 	}
 	return nil
@@ -65,4 +59,14 @@ func (Pipe) Publish(ctx *context.Context) error {
 		})
 	}
 	return g.Wait()
+}
+
+// errorContains check if error contains specific string
+func errorContains(err error, subs ...string) bool {
+	for _, sub := range subs {
+		if strings.Contains(err.Error(), sub) {
+			return true
+		}
+	}
+	return false
 }

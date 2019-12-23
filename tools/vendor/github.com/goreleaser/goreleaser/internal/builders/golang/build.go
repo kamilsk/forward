@@ -68,35 +68,7 @@ func (*Builder) Build(ctx *context.Context, build config.Build, options api.Opti
 	var env = append(ctx.Env.Strings(), build.Env...)
 	env = append(env, target.Env()...)
 
-	flags, err := processFlags(ctx, env, build.Flags, "")
-	if err != nil {
-		return err
-	}
-	cmd = append(cmd, flags...)
-
-	asmflags, err := processFlags(ctx, env, build.Asmflags, "-asmflags=")
-	if err != nil {
-		return err
-	}
-	cmd = append(cmd, asmflags...)
-
-	gcflags, err := processFlags(ctx, env, build.Gcflags, "-gcflags=")
-	if err != nil {
-		return err
-	}
-	cmd = append(cmd, gcflags...)
-
-	ldflags, err := processFlags(ctx, env, build.Ldflags, "-ldflags=")
-	if err != nil {
-		return err
-	}
-	cmd = append(cmd, ldflags...)
-
-	cmd = append(cmd, "-o", options.Path, build.Main)
-	if err := run(ctx, cmd, env); err != nil {
-		return errors.Wrapf(err, "failed to build for %s", options.Target)
-	}
-	ctx.Artifacts.Add(artifact.Artifact{
+	artifact := &artifact.Artifact{
 		Type:   artifact.Binary,
 		Path:   options.Path,
 		Name:   options.Name,
@@ -108,20 +80,62 @@ func (*Builder) Build(ctx *context.Context, build config.Build, options api.Opti
 			"Ext":    options.Ext,
 			"ID":     build.ID,
 		},
-	})
+	}
+
+	flags, err := processFlags(ctx, artifact, env, build.Flags, "")
+	if err != nil {
+		return err
+	}
+	cmd = append(cmd, flags...)
+
+	asmflags, err := processFlags(ctx, artifact, env, build.Asmflags, "-asmflags=")
+	if err != nil {
+		return err
+	}
+	cmd = append(cmd, asmflags...)
+
+	gcflags, err := processFlags(ctx, artifact, env, build.Gcflags, "-gcflags=")
+	if err != nil {
+		return err
+	}
+	cmd = append(cmd, gcflags...)
+
+	// flag prefix is skipped because ldflags need to output a single string
+	ldflags, err := processFlags(ctx, artifact, env, build.Ldflags, "")
+	if err != nil {
+		return err
+	}
+	// ldflags need to be single string in order to apply correctly
+	processedLdFlags := joinLdFlags(ldflags)
+
+	cmd = append(cmd, processedLdFlags)
+
+	cmd = append(cmd, "-o", options.Path, build.Main)
+	if err := run(ctx, cmd, env); err != nil {
+		return errors.Wrapf(err, "failed to build for %s", options.Target)
+	}
+	ctx.Artifacts.Add(artifact)
 	return nil
 }
 
-func processFlags(ctx *context.Context, env, flags []string, flagPrefix string) ([]string, error) {
+func processFlags(ctx *context.Context, a *artifact.Artifact, env, flags []string, flagPrefix string) ([]string, error) {
 	processed := make([]string, 0, len(flags))
 	for _, rawFlag := range flags {
-		flag, err := tmpl.New(ctx).WithEnvS(env).Apply(rawFlag)
+		flag, err := tmpl.New(ctx).WithEnvS(env).WithArtifact(a, map[string]string{}).Apply(rawFlag)
 		if err != nil {
 			return nil, err
 		}
 		processed = append(processed, flagPrefix+flag)
 	}
 	return processed, nil
+}
+
+func joinLdFlags(flags []string) string {
+	ldflagString := strings.Builder{}
+	ldflagString.WriteString("-ldflags=")
+	ldflagString.WriteString(strings.Join(flags, " "))
+
+	return ldflagString.String()
 }
 
 func run(ctx *context.Context, command, env []string) error {

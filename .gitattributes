@@ -3,7 +3,10 @@
 .goreleaser     export-ignore
 .travis.yml     export-ignore
 
+/.github        export-ignore
+/bin            export-ignore
 Makefile        export-ignore
-
 *.md            export-ignore
+
 *_test.go       export-ignore
+testdata        export-ignore

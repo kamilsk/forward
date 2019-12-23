@@ -1,7 +1,7 @@
 dist: trusty
 sudo: required
 language: go
-go: '1.12.x'
+go: '1.13.x'
 services:
   - docker
 addons:
@@ -13,7 +13,6 @@ env:
   - PATH=/snap/bin:$PATH
 install:
   - make setup
-  - npm install -g prettier
   - sudo snap install snapcraft --classic
 script:
   - make ci

@@ -15,6 +15,11 @@
 // Package azureblob provides a blob implementation that uses Azure Storage’s
 // BlockBlob. Use OpenBucket to construct a *blob.Bucket.
 //
+// NOTE: SignedURLs for PUT created with this package are not fully portable;
+// they will not work unless the PUT request includes a "x-ms-blob-type" header
+// set to "BlockBlob".
+// See https://stackoverflow.com/questions/37824136/put-on-sas-blob-url-without-specifying-x-ms-blob-type-header.
+//
 // URLs
 //
 // For blob.OpenBucket, azureblob registers for the scheme "azblob".
@@ -23,11 +28,11 @@
 // AZURE_STORAGE_ACCOUNT is required, along with one of the other two.
 // To customize the URL opener, or for more details on the URL format,
 // see URLOpener.
-// See https://godoc.org/gocloud.dev#hdr-URLs for background information.
+// See https://gocloud.dev/concepts/urls/ for background information.
 //
 // Escaping
 //
-// Go CDK supports all UTF-8 strings; to make this work with providers lacking
+// Go CDK supports all UTF-8 strings; to make this work with services lacking
 // full UTF-8 support, strings must be escaped (during writes) and unescaped
 // (during reads). The following escapes are performed for azureblob:
 //  - Blob keys: ASCII characters 0-31, 92 ("\"), and 127 are escaped to
@@ -48,6 +53,7 @@
 //  - ListObject: azblob.BlobItem for objects, azblob.BlobPrefix for "directories"
 //  - ListOptions.BeforeList: *azblob.ListBlobsSegmentOptions
 //  - Reader: azblob.DownloadResponse
+//  - Reader.BeforeRead: *azblob.BlockBlobURL, *azblob.BlobAccessConditions
 //  - Attributes: azblob.BlobGetPropertiesResponse
 //  - CopyOptions.BeforeCopy: azblob.Metadata, *azblob.ModifiedAccessConditions, *azblob.BlobAccessConditions
 //  - WriterOptions.BeforeWrite: *azblob.UploadStreamToBlockBlobOptions
@@ -105,8 +111,8 @@ func init() {
 // Set holds Wire providers for this package.
 var Set = wire.NewSet(
 	NewPipeline,
-	Options{},
-	URLOpener{},
+	wire.Struct(new(Options), "Credential", "SASToken"),
+	wire.Struct(new(URLOpener), "AccountName", "Pipeline", "Options"),
 )
 
 // lazyCredsOpener obtains credentials from the environment on the first call
@@ -193,7 +199,7 @@ var DefaultIdentity = wire.NewSet(
 	DefaultAccountName,
 	DefaultAccountKey,
 	NewCredential,
-	wire.Bind(new(azblob.Credential), new(azblob.SharedKeyCredential)),
+	wire.Bind(new(azblob.Credential), new(*azblob.SharedKeyCredential)),
 	wire.Value(azblob.PipelineOptions{}),
 )
 
@@ -408,13 +414,31 @@ func (r *reader) As(i interface{}) bool {
 func (b *bucket) NewRangeReader(ctx context.Context, key string, offset, length int64, opts *driver.ReaderOptions) (driver.Reader, error) {
 	key = escapeKey(key, false)
 	blockBlobURL := b.containerURL.NewBlockBlobURL(key)
+	blockBlobURLp := &blockBlobURL
+	accessConditions := &azblob.BlobAccessConditions{}
 
 	end := length
 	if end < 0 {
 		end = azblob.CountToEnd
 	}
+	if opts.BeforeRead != nil {
+		asFunc := func(i interface{}) bool {
+			if p, ok := i.(**azblob.BlockBlobURL); ok {
+				*p = blockBlobURLp
+				return true
+			}
+			if p, ok := i.(**azblob.BlobAccessConditions); ok {
+				*p = accessConditions
+				return true
+			}
+			return false
+		}
+		if err := opts.BeforeRead(asFunc); err != nil {
+			return nil, err
+		}
+	}
 
-	blobDownloadResponse, err := blockBlobURL.Download(ctx, offset, end, azblob.BlobAccessConditions{}, false)
+	blobDownloadResponse, err := blockBlobURLp.Download(ctx, offset, end, *accessConditions, false)
 	if err != nil {
 		return nil, err
 	}
@@ -618,13 +642,25 @@ func (b *bucket) SignedURL(ctx context.Context, key string, opts *driver.SignedU
 	blockBlobURL := b.containerURL.NewBlockBlobURL(key)
 	srcBlobParts := azblob.NewBlobURLParts(blockBlobURL.URL())
 
+	perms := azblob.BlobSASPermissions{}
+	switch opts.Method {
+	case http.MethodGet:
+		perms.Read = true
+	case http.MethodPut:
+		perms.Create = true
+		perms.Write = true
+	case http.MethodDelete:
+		perms.Delete = true
+	default:
+		return "", fmt.Errorf("unsupported Method %s", opts.Method)
+	}
 	var err error
 	srcBlobParts.SAS, err = azblob.BlobSASSignatureValues{
 		Protocol:      azblob.SASProtocolHTTPS,
 		ExpiryTime:    time.Now().UTC().Add(opts.Expiry),
 		ContainerName: b.name,
 		BlobName:      srcBlobParts.BlobName,
-		Permissions:   azblob.BlobSASPermissions{Read: true}.String(),
+		Permissions:   perms.String(),
 	}.NewSASQueryParameters(b.opts.Credential)
 	if err != nil {
 		return "", err
@@ -771,7 +807,7 @@ func (w *writer) open(pr *io.PipeReader) error {
 	return nil
 }
 
-// Close completes the writer and close it. Any error occuring during write will
+// Close completes the writer and closes it. Any error occurring during write will
 // be returned. If a writer is closed before any Write is called, Close will
 // create an empty file at the given key.
 func (w *writer) Close() error {

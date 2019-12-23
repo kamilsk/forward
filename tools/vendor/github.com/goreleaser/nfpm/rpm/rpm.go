@@ -26,7 +26,7 @@ func init() {
 	nfpm.Register("rpm", Default)
 }
 
-// Default deb packager
+// Default RPM packager
 // nolint: gochecknoglobals
 var Default = &RPM{}
 
@@ -37,14 +37,20 @@ type RPM struct{}
 var archToRPM = map[string]string{
 	"amd64": "x86_64",
 	"386":   "i386",
+	"arm64": "aarch64",
 }
 
-// Package writes a new RPM package to the given writer using the given info
-func (*RPM) Package(info nfpm.Info, w io.Writer) error {
+func ensureValidArch(info nfpm.Info) nfpm.Info {
 	arch, ok := archToRPM[info.Arch]
 	if ok {
 		info.Arch = arch
 	}
+	return info
+}
+
+// Package writes a new RPM package to the given writer using the given info
+func (*RPM) Package(info nfpm.Info, w io.Writer) error {
+	info = ensureValidArch(info)
 	info.Version = strings.Replace(info.Version, "-", "_", -1)
 	_, err := exec.LookPath("rpmbuild")
 	if err != nil {
@@ -54,6 +60,7 @@ func (*RPM) Package(info nfpm.Info, w io.Writer) error {
 	if err != nil {
 		return err
 	}
+	defer os.RemoveAll(temps.Root)
 	if err = createTarGz(info, temps.Folder, temps.Source); err != nil {
 		return err
 	}
@@ -65,6 +72,8 @@ func (*RPM) Package(info nfpm.Info, w io.Writer) error {
 		"--verbose",
 		"--define", fmt.Sprintf("_topdir %s", temps.Root),
 		"--define", fmt.Sprintf("_tmppath %s/tmp", temps.Root),
+		"--define", fmt.Sprintf("_rpmfilename %s", filepath.Join(info.Arch, filepath.Base(temps.RPM))),
+		"--define", fmt.Sprintf("_sourcedir %s", filepath.Dir(temps.Source)),
 		"--target", fmt.Sprintf("%s-unknown-%s", info.Arch, info.Platform),
 		"-ba",
 		"SPECS/" + info.Name + ".spec",
@@ -84,6 +93,7 @@ func (*RPM) Package(info nfpm.Info, w io.Writer) error {
 	if err != nil {
 		return errors.Wrap(err, "failed open rpm file")
 	}
+	defer rpm.Close()
 	_, err = io.Copy(w, rpm)
 	return errors.Wrap(err, "failed to copy rpm file to writer")
 }
@@ -219,7 +229,7 @@ func setupTempFiles(info nfpm.Info) (tempFiles, error) {
 		Folder: folder,
 		Source: filepath.Join(root, "SOURCES", folder+".tar.gz"),
 		Spec:   filepath.Join(root, "SPECS", info.Name+".spec"),
-		RPM:    filepath.Join(root, "RPMS", info.Arch, fmt.Sprintf("%s-1.%s.rpm", folder, info.Arch)),
+		RPM:    filepath.Join(root, "RPMS", info.Arch, fmt.Sprintf("%s-%s.%s.rpm", folder, info.RPM.Release, info.Arch)),
 	}, nil
 }
 
@@ -309,20 +319,49 @@ const specTemplate = `
 %define __os_install_post %{_dbpath}/brp-compress
 %define _arch {{ .Info.Arch }}
 %define _bindir {{ .Info.Bindir }}
+{{- if eq .Info.Overridables.RPM.Compression "gzip"}}
+%define _source_payload w9.gzdio
+%define _binary_payload w9.gzdio
+{{- end}}
+{{- if eq .Info.Overridables.RPM.Compression "xz"}}
+%define _source_payload w6.xzdio
+%define _binary_payload w6.xzdio
+{{- end}}
+{{- if eq .Info.Overridables.RPM.Compression "lzma"}}
+%define _source_payload w6.lzdio
+%define _binary_payload w6.lzdio
+{{- end}}
 
 Name: {{ .Info.Name }}
 Summary: {{ first_line .Info.Description }}
+{{- with .Info.Epoch}}
+Epoch: {{ . }}
+{{- end }}
 Version: {{ .Info.Version }}
+{{- with .Info.Overridables.RPM.Release }}
+Release: {{ . }}
+{{- else }}
 Release: 1
+{{- end }}
 {{- with .Info.License }}
 License: {{ . }}
 {{- end }}
+{{- with .Info.Overridables.RPM.Group }}
+Group: {{ . }}
+{{- else }}
 Group: Development/Tools
+{{- end }}
 SOURCE0 : %{name}-%{version}.tar.gz
 {{- with .Info.Homepage }}
 URL: {{ . }}
 {{- end }}
+{{- with .Info.Maintainer}}
+Packager: {{ . }}
+{{- end }}
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+{{- with .Info.Overridables.RPM.Prefix }}
+Prefix: {{ . }}
+{{- end }}
 
 {{ range $index, $element := .Info.Replaces }}
 Obsoletes: {{ . }}

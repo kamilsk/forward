@@ -1,8 +1,9 @@
-FROM golang:1.12-alpine
+FROM golang:1.13-alpine
 
 RUN apk add --no-cache bash \
+                       bzr \
                        curl \
-                       docker \
+                       docker-cli \
                        git \
                        mercurial \
                        rpm

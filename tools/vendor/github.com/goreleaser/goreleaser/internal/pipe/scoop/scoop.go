@@ -17,6 +17,9 @@ import (
 // ErrNoWindows when there is no build for windows (goos doesn't contain windows)
 var ErrNoWindows = errors.New("scoop requires a windows build")
 
+// ErrTokenTypeNotImplementedForScoop indicates that a new token type was not implemented for this pipe
+var ErrTokenTypeNotImplementedForScoop = errors.New("token type not implemented for scoop pipe")
+
 // Pipe for build
 type Pipe struct{}
 
@@ -26,7 +29,7 @@ func (Pipe) String() string {
 
 // Publish scoop manifest
 func (Pipe) Publish(ctx *context.Context) error {
-	client, err := client.NewGitHub(ctx)
+	client, err := client.New(ctx)
 	if err != nil {
 		return err
 	}
@@ -44,14 +47,7 @@ func (Pipe) Default(ctx *context.Context) error {
 	if ctx.Config.Scoop.CommitAuthor.Email == "" {
 		ctx.Config.Scoop.CommitAuthor.Email = "goreleaser@carlosbecker.com"
 	}
-	if ctx.Config.Scoop.URLTemplate == "" {
-		ctx.Config.Scoop.URLTemplate = fmt.Sprintf(
-			"%s/%s/%s/releases/download/{{ .Tag }}/{{ .ArtifactName }}",
-			ctx.Config.GitHubURLs.Download,
-			ctx.Config.Release.GitHub.Owner,
-			ctx.Config.Release.GitHub.Name,
-		)
-	}
+
 	return nil
 }
 
@@ -59,6 +55,12 @@ func doRun(ctx *context.Context, client client.Client) error {
 	if ctx.Config.Scoop.Bucket.Name == "" {
 		return pipe.Skip("scoop section is not configured")
 	}
+
+	// TODO mavogel: in another PR
+	// check if release pipe is not configured!
+	// if ctx.Config.Release.Disable {
+	// }
+
 	if ctx.Config.Archive.Format == "binary" {
 		return pipe.Skip("archive format is binary")
 	}
@@ -86,11 +88,14 @@ func doRun(ctx *context.Context, client client.Client) error {
 	if ctx.Config.Release.Draft {
 		return pipe.Skip("release is marked as draft")
 	}
+	if ctx.Config.Release.Disable {
+		return pipe.Skip("release is disabled")
+	}
 	return client.CreateFile(
 		ctx,
 		ctx.Config.Scoop.CommitAuthor,
 		ctx.Config.Scoop.Bucket,
-		content,
+		content.Bytes(),
 		path,
 		fmt.Sprintf("Scoop update for %s version %s", ctx.Config.ProjectName, ctx.Git.CurrentTag),
 	)
@@ -114,7 +119,7 @@ type Resource struct {
 	Hash string   `json:"hash"` // the archive checksum
 }
 
-func buildManifest(ctx *context.Context, artifacts []artifact.Artifact) (bytes.Buffer, error) {
+func buildManifest(ctx *context.Context, artifacts []*artifact.Artifact) (bytes.Buffer, error) {
 	var result bytes.Buffer
 	var manifest = Manifest{
 		Version:      ctx.Version,
@@ -123,6 +128,27 @@ func buildManifest(ctx *context.Context, artifacts []artifact.Artifact) (bytes.B
 		License:      ctx.Config.Scoop.License,
 		Description:  ctx.Config.Scoop.Description,
 		Persist:      ctx.Config.Scoop.Persist,
+	}
+
+	if ctx.Config.Scoop.URLTemplate == "" {
+		switch ctx.TokenType {
+		case context.TokenTypeGitHub:
+			ctx.Config.Scoop.URLTemplate = fmt.Sprintf(
+				"%s/%s/%s/releases/download/{{ .Tag }}/{{ .ArtifactName }}",
+				ctx.Config.GitHubURLs.Download,
+				ctx.Config.Release.GitHub.Owner,
+				ctx.Config.Release.GitHub.Name,
+			)
+		case context.TokenTypeGitLab:
+			ctx.Config.Scoop.URLTemplate = fmt.Sprintf(
+				"%s/%s/%s/uploads/{{ .ArtifactUploadHash }}/{{ .ArtifactName }}",
+				ctx.Config.GitLabURLs.Download,
+				ctx.Config.Release.GitLab.Owner,
+				ctx.Config.Release.GitLab.Name,
+			)
+		default:
+			return result, ErrTokenTypeNotImplementedForScoop
+		}
 	}
 
 	for _, artifact := range artifacts {
@@ -158,10 +184,10 @@ func buildManifest(ctx *context.Context, artifacts []artifact.Artifact) (bytes.B
 	return result, err
 }
 
-func binaries(a artifact.Artifact) []string {
+func binaries(a *artifact.Artifact) []string {
 	// nolint: prealloc
 	var bins []string
-	for _, b := range a.ExtraOr("Builds", []artifact.Artifact{}).([]artifact.Artifact) {
+	for _, b := range a.ExtraOr("Builds", []*artifact.Artifact{}).([]*artifact.Artifact) {
 		bins = append(bins, b.ExtraOr("Binary", "").(string)+".exe")
 	}
 	return bins

@@ -40,6 +40,8 @@ const (
 	arm          = "Arm"
 	binary       = "Binary"
 	artifactName = "ArtifactName"
+	// gitlab only
+	artifactUploadHash = "ArtifactUploadHash"
 )
 
 // New Template
@@ -82,7 +84,7 @@ func (t *Template) WithEnv(e map[string]string) *Template {
 }
 
 // WithArtifact populates fields from the artifact and replacements
-func (t *Template) WithArtifact(a artifact.Artifact, replacements map[string]string) *Template {
+func (t *Template) WithArtifact(a *artifact.Artifact, replacements map[string]string) *Template {
 	var bin = a.Extra[binary]
 	if bin == nil {
 		bin = t.fields[projectName]
@@ -92,6 +94,11 @@ func (t *Template) WithArtifact(a artifact.Artifact, replacements map[string]str
 	t.fields[arm] = replace(replacements, a.Goarm)
 	t.fields[binary] = bin.(string)
 	t.fields[artifactName] = a.Name
+	if val, ok := a.Extra["ArtifactUploadHash"]; ok {
+		t.fields[artifactUploadHash] = val
+	} else {
+		t.fields[artifactUploadHash] = ""
+	}
 	return t
 }
 

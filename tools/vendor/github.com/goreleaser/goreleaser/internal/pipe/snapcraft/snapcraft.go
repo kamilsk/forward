@@ -50,9 +50,10 @@ type Metadata struct {
 
 // AppMetadata for the binaries that will be in the snap package
 type AppMetadata struct {
-	Command string
-	Plugs   []string `yaml:",omitempty"`
-	Daemon  string   `yaml:",omitempty"`
+	Command   string
+	Plugs     []string `yaml:",omitempty"`
+	Daemon    string   `yaml:",omitempty"`
+	Completer string   `yaml:",omitempty"`
 }
 
 const defaultNameTemplate = "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
@@ -72,7 +73,7 @@ func (Pipe) Default(ctx *context.Context) error {
 			deprecate.Notice("snapcraft")
 		}
 	}
-	var ids = ids.New()
+	var ids = ids.New("snapcrafts")
 	for i := range ctx.Config.Snapcrafts {
 		var snap = &ctx.Config.Snapcrafts[i]
 		if snap.NameTemplate == "" {
@@ -148,7 +149,7 @@ func (Pipe) Publish(ctx *context.Context) error {
 	return g.Wait()
 }
 
-func create(ctx *context.Context, snap config.Snapcraft, arch string, binaries []artifact.Artifact) error {
+func create(ctx *context.Context, snap config.Snapcraft, arch string, binaries []*artifact.Artifact) error {
 	var log = log.WithField("arch", arch)
 	folder, err := tmpl.New(ctx).
 		WithArtifact(binaries[0], snap.Replacements).
@@ -199,6 +200,7 @@ func create(ctx *context.Context, snap config.Snapcraft, arch string, binaries [
 		appMetadata := AppMetadata{
 			Command: name,
 		}
+		completerPath := ""
 		if configAppMetadata, ok := snap.Apps[name]; ok {
 			appMetadata.Plugs = configAppMetadata.Plugs
 			appMetadata.Daemon = configAppMetadata.Daemon
@@ -206,6 +208,10 @@ func create(ctx *context.Context, snap config.Snapcraft, arch string, binaries [
 				appMetadata.Command,
 				configAppMetadata.Args,
 			}, " "))
+			if configAppMetadata.Completer != "" {
+				completerPath = configAppMetadata.Completer
+				appMetadata.Completer = filepath.Base(completerPath)
+			}
 		}
 		metadata.Apps[name] = appMetadata
 		metadata.Plugs = snap.Plugs
@@ -219,6 +225,19 @@ func create(ctx *context.Context, snap config.Snapcraft, arch string, binaries [
 		}
 		if err := os.Chmod(destBinaryPath, 0555); err != nil {
 			return errors.Wrap(err, "failed to change binary permissions")
+		}
+
+		if completerPath != "" {
+			destCompleterPath := filepath.Join(primeDir, filepath.Base(completerPath))
+			log.WithField("src", completerPath).
+				WithField("dst", destCompleterPath).
+				Debug("linking")
+			if err := os.Link(completerPath, destCompleterPath); err != nil {
+				return errors.Wrap(err, "failed to link completer")
+			}
+			if err := os.Chmod(destCompleterPath, 0444); err != nil {
+				return errors.Wrap(err, "failed to change completer permissions")
+			}
 		}
 	}
 
@@ -247,7 +266,7 @@ func create(ctx *context.Context, snap config.Snapcraft, arch string, binaries [
 	if !snap.Publish {
 		return nil
 	}
-	ctx.Artifacts.Add(artifact.Artifact{
+	ctx.Artifacts.Add(&artifact.Artifact{
 		Type:   artifact.PublishableSnapcraft,
 		Name:   folder + ".snap",
 		Path:   snapFile,
@@ -258,13 +277,20 @@ func create(ctx *context.Context, snap config.Snapcraft, arch string, binaries [
 	return nil
 }
 
-func push(ctx *context.Context, snap artifact.Artifact) error {
-	log.WithField("snap", snap.Name).Info("pushing snap")
+const reviewWaitMsg = `Waiting for previous upload(s) to complete their review process.`
+
+func push(ctx *context.Context, snap *artifact.Artifact) error {
+	var log = log.WithField("snap", snap.Name)
+	log.Info("pushing snap")
 	// TODO: customize --release based on snap.Grade?
 	/* #nosec */
 	var cmd = exec.CommandContext(ctx, "snapcraft", "push", "--release=stable", snap.Path)
 	if out, err := cmd.CombinedOutput(); err != nil {
-		return fmt.Errorf("failed to push %s package: %s", snap.Path, string(out))
+		if strings.Contains(string(out), reviewWaitMsg) {
+			log.Warn(reviewWaitMsg)
+		} else {
+			return fmt.Errorf("failed to push %s package: %s", snap.Path, string(out))
+		}
 	}
 	snap.Type = artifact.Snapcraft
 	ctx.Artifacts.Add(snap)

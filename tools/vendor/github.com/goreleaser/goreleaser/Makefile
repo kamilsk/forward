@@ -4,13 +4,15 @@ TEST_OPTIONS?=
 
 export PATH := ./bin:$(PATH)
 export GO111MODULE := on
-export GOPROXY := https://gocenter.io
+# enable consistent Go 1.12/1.13 GOPROXY behavior.
+export GOPROXY = https://proxy.golang.org
 
 # Install all the build and lint dependencies
 setup:
 	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh
 	curl -sfL https://install.goreleaser.com/github.com/gohugoio/hugo.sh | sh
-	go mod download
+	curl -L https://git.io/misspell | sh
+	go mod tidy
 .PHONY: setup
 
 # Run all the tests
@@ -26,18 +28,27 @@ cover: test
 # gofmt and goimports all go files
 fmt:
 	find . -name '*.go' -not -wholename './vendor/*' | while read -r file; do gofmt -w -s "$$file"; goimports -w "$$file"; done
-	# find . -name '*.md' -not -wholename './vendor/*' | xargs prettier --write
 .PHONY: fmt
 
 # Run all the linters
 lint:
-	# TODO: fix tests and lll issues
-	./bin/golangci-lint run --tests=false --enable-all --disable=lll ./...
-	# find . -name '*.md' -not -wholename './vendor/*' | xargs prettier -l
+	# TODO: fix tests issues
+	# TODO: fix lll issues
+	# TODO: fix funlen issues
+	# TODO: fix godox issues
+	./bin/golangci-lint run --tests=false --enable-all --disable=lll --disable funlen --disable godox ./...
+	./bin/misspell -error **/*
 .PHONY: lint
 
+# Clean go.mod
+go-mod-tidy:
+	@go mod tidy -v
+	@git diff HEAD
+	@git diff-index --quiet HEAD
+.PHONY: go-mod-tidy
+
 # Run all the tests and code checks
-ci: build test lint
+ci: build test lint go-mod-tidy
 .PHONY: ci
 
 # Build a beta version of goreleaser

@@ -42,7 +42,7 @@ func (Pipe) Run(ctx *context.Context) error {
 
 // Default sets the pipe defaults
 func (Pipe) Default(ctx *context.Context) error {
-	var ids = ids.New()
+	var ids = ids.New("builds")
 	for i, build := range ctx.Config.Builds {
 		ctx.Config.Builds[i] = buildWithDefaults(ctx, build)
 		ids.Inc(ctx.Config.Builds[i].ID)
@@ -63,7 +63,7 @@ func buildWithDefaults(ctx *context.Context, build config.Build) config.Build {
 		build.Binary = ctx.Config.ProjectName
 	}
 	if build.ID == "" {
-		build.ID = build.Binary
+		build.ID = ctx.Config.ProjectName
 	}
 	for k, v := range build.Env {
 		build.Env[k] = os.ExpandEnv(v)

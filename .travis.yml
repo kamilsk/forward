@@ -3,25 +3,23 @@ language: go
 
 cache:
   directories:
-  - $HOME/.cache/go-build
-  - $HOME/gopath/pkg/mod
+    - $HOME/.cache/go-build
+    - $HOME/gopath/pkg/mod
 
 env:
   global:
-  - CODECLIMATE=https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
-  - GO111MODULE=on
-  - GOFLAGS=-mod=vendor
+    - CODECLIMATE=https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
 
 go:
-- master
-- 1.x
-- 1.10.x
-- 1.11.x
-- 1.12.x
+  - master
+  - 1.x
+  - 1.11.x
+  - 1.12.x
+  - 1.13.x
 
 before_script:
 - |
-  if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then
+  if [[ $TRAVIS_GO_VERSION == 1.13* ]]; then
     curl -L $CODECLIMATE > bin/cc-test-reporter
     chmod +x bin/cc-test-reporter
     bin/cc-test-reporter before-build
@@ -29,7 +27,7 @@ before_script:
 
 script:
 - |
-  if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then
+  if [[ $TRAVIS_GO_VERSION == 1.13* ]]; then
     make test-with-coverage-profile
   else
     make test
@@ -37,7 +35,7 @@ script:
 
 after_script:
 - |
-  if [[ $TRAVIS_GO_VERSION == 1.12* ]]; then
+  if [[ $TRAVIS_GO_VERSION == 1.13* ]]; then
     bin/cc-test-reporter after-build -t gocov -p $(basename $(go list -m)) --exit-code $TRAVIS_TEST_RESULT
     if [[ $TRAVIS_TAG ]]; then
       curl -sL https://git.io/goreleaser | bash

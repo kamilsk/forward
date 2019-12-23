@@ -53,7 +53,15 @@ func (Pipe) Run(ctx *context.Context) error {
 	if err != nil {
 		return err
 	}
-	ctx.ReleaseNotes = fmt.Sprintf("## Changelog\n\n%v\n", strings.Join(entries, "\n"))
+
+	changelogStringJoiner := "\n"
+	if ctx.TokenType == context.TokenTypeGitLab || ctx.TokenType == context.TokenTypeGitea {
+		// We need two or more whitespace to let markdown interpret
+		// it as newline. See https://docs.gitlab.com/ee/user/markdown.html#newlines for details
+		log.Debug("is gitlab or gitea changelog")
+		changelogStringJoiner = "   \n"
+	}
+	ctx.ReleaseNotes = fmt.Sprintf("## Changelog\n\n%v\n", strings.Join(entries, changelogStringJoiner))
 	var path = filepath.Join(ctx.Config.Dist, "CHANGELOG.md")
 	log.WithField("changelog", path).Info("writing")
 	return ioutil.WriteFile(path, []byte(ctx.ReleaseNotes), 0644)
