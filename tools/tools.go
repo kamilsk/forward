@@ -4,11 +4,15 @@
 
 package tools
 
-// tool dependencies
 import (
 	_ "github.com/golang/mock/mockgen"
 	_ "github.com/golangci/golangci-lint/cmd/golangci-lint"
-	_ "github.com/goreleaser/godownloader"
-	_ "github.com/goreleaser/goreleaser"
 	_ "golang.org/x/tools/cmd/goimports"
+
+	_ "github.com/kamilsk/egg"
 )
+
+//go:generate go build -v -o=${ROOT}bin/mockgen github.com/golang/mock/mockgen
+//go:generate go build -v -o=${ROOT}bin/golangci-lint github.com/golangci/golangci-lint/cmd/golangci-lint
+//go:generate go build -v -o=${ROOT}bin/egg github.com/kamilsk/egg
+//go:generate go build -v -o=${ROOT}bin/goimports golang.org/x/tools/cmd/goimports

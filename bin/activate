@@ -21,9 +21,11 @@ deactivate () {
         unset -f realpath
         unset -f get
         unset -f up
+        unset -f tools
     fi
 
     unset BINPATH
+    unset ROOT
 }
 
 realpath () {
@@ -40,7 +42,11 @@ get () {
 
 up () {
     get -u $@
-    make deps
+    go mod tidy && go mod vendor
+}
+
+tools () {
+    (cd "${ROOT%/}"/tools && make $@)
 }
 
 deactivate nondestructive
@@ -48,6 +54,7 @@ deactivate nondestructive
 _OLD_PATH="${PATH}"
 export BINPATH=$(realpath $(dirname $0))
 export PATH="${BINPATH}:${PATH}"
+export ROOT=$(dirname $(realpath $(dirname $0)))/
 
 if [[ -z "${BINPATH_DISABLE_PROMPT:-}" ]]; then
     _OLD_PS1="${PS1:-}"

@@ -9,13 +9,13 @@ github.com/google/gops/internal
 github.com/google/gops/signal
 # github.com/inconshreveable/mousetrap v1.0.0
 github.com/inconshreveable/mousetrap
-# github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
+# github.com/kardianos/osext v0.0.0-20170510131534-ae77be60afb1
 github.com/kardianos/osext
 # github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51
 github.com/kballard/go-shellquote
-# github.com/mattn/go-colorable v0.1.4
+# github.com/mattn/go-colorable v0.0.9
 github.com/mattn/go-colorable
-# github.com/mattn/go-isatty v0.0.11
+# github.com/mattn/go-isatty v0.0.3
 github.com/mattn/go-isatty
 # github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b
 github.com/mgutz/ansi
@@ -29,11 +29,11 @@ github.com/spf13/cobra
 github.com/spf13/pflag
 # github.com/stretchr/testify v1.4.0
 github.com/stretchr/testify/assert
-# go.octolab.org v0.0.7
+# go.octolab.org v0.0.5
 go.octolab.org/os/shell
 # go.octolab.org/toolkit/cli v0.0.6
 go.octolab.org/toolkit/cli/cobra
-# golang.org/x/sys v0.0.0-20191220220014-0732a990476f
+# golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a
 golang.org/x/sys/unix
 # gopkg.in/AlecAivazis/survey.v1 v1.8.7
 gopkg.in/AlecAivazis/survey.v1

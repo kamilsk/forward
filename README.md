@@ -2,7 +2,8 @@
 >
 > `forward` - extended `kubectl port-forward` - reliable multiple port forwarding.
 
-[![Build][icon_build]][page_build]
+[![Build][build.icon]][build.page]
+[![Template][template.icon]][template.page]
 
 ## 💡 Idea
 
@@ -10,7 +11,7 @@
 $ forward postgresql 5432 redis 6379:6379
 ```
 
-Full description of the idea is available [here][design].
+Full description of the idea is available [here][design.page].
 
 ## 🏆 Motivation
 
@@ -56,7 +57,9 @@ $ brew install kamilsk/tap/forward
 ### Binary
 
 ```bash
-$ curl -sfL https://bit.ly/install-forward | bash
+$ curl -sSL https://bit.ly/install-forward | sh
+# or
+$ wget -qO- https://bit.ly/install-forward | sh
 ```
 
 ### Source
@@ -65,11 +68,10 @@ $ curl -sfL https://bit.ly/install-forward | bash
 # use standard go tools
 $ go get -u github.com/kamilsk/forward
 # or use egg tool
-$ egg github.com/kamilsk/forward -- go install .
-$ egg bitbucket.org/kamilsk/forward -- go install .
+$ egg tools add github.com/kamilsk/forward
 ```
 
-> [egg][]<sup id="anchor-egg">[1](#egg)</sup> is an `extended go get`.
+> [egg][egg.page]<sup id="anchor-egg">[1](#egg)</sup> is an `extended go get`.
 
 ### Bash and Zsh completions
 
@@ -84,10 +86,14 @@ $ forward completion zsh  > /path/to/zsh-completions/_forward.zsh
 
 made with ❤️ for everyone
 
-[icon_build]:       https://travis-ci.org/kamilsk/forward.svg?branch=master
+[build.icon]:       https://travis-ci.org/kamilsk/forward.svg?branch=master
+[build.page]:       https://travis-ci.org/kamilsk/forward
 
-[page_build]:       https://travis-ci.org/kamilsk/forward
-[page_promo]:       https://github.com/kamilsk/forward
+[design.page]:      https://www.notion.so/octolab/forward-94a09f0b2f6143d1b71d08edf3e52771?r=0b753cbf767346f5a6fd51194829a2f3
 
-[egg]:              https://github.com/kamilsk/egg
-[design]:           https://www.notion.so/octolab/forward-94a09f0b2f6143d1b71d08edf3e52771?r=0b753cbf767346f5a6fd51194829a2f3
+[promo.page]:       https://github.com/kamilsk/forward
+
+[template.page]:    https://github.com/octomation/go-tool
+[template.icon]:    https://img.shields.io/badge/template-go--tool-blue
+
+[egg.page]:         https://github.com/kamilsk/egg
