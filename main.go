@@ -17,9 +17,11 @@ import (
 	"github.com/kamilsk/forward/internal/kubernetes/cli/client"
 )
 
+const unknown = "unknown"
+
 var (
-	commit  = "none"
-	date    = "unknown"
+	commit  = unknown
+	date    = unknown
 	version = "dev"
 )
 
